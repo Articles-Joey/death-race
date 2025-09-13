@@ -8,6 +8,9 @@ export const useStore = create()(
       darkMode: true,
       toggleDarkMode: () => set({ darkMode: !get().darkMode }),
 
+      theme: "Light",
+      toggleTheme: () => set({ theme: get().theme === "Light" ? "Dark" : "Light" }),
+
     }),
     {
       name: 'accounts-site-storage', // name of the item in the storage (must be unique)

@@ -73,44 +73,15 @@ export default function FourFrogsSettingsModal({
                             <div>
                                 {[
                                     {
-                                        action: 'Move Up',
-                                        defaultKeyboardKey: 'W'
+                                        action: 'Move Forward',
+                                        defaultKeyboardKey: 'Space',
+                                        editable: true
                                     },
                                     {
-                                        action: 'Move Down',
-                                        defaultKeyboardKey: 'S'
+                                        action: 'Move Cursor',
+                                        defaultKeyboardKey: 'Mouse or Joypad',
+                                        editable: false
                                     },
-                                    {
-                                        action: 'Move Left',
-                                        defaultKeyboardKey: 'A'
-                                    },
-                                    {
-                                        action: 'Move Right',
-                                        defaultKeyboardKey: 'D'
-                                    },
-                                    {
-                                        action: 'Drop Insect',
-                                        defaultKeyboardKey: 'Space'
-                                    },
-                                    {
-                                        action: 'Stop Powerup',
-                                        defaultKeyboardKey: 'ArrowDown'
-                                    },
-                                    {
-                                        emote: true,
-                                        action: 'Stick out Tongue',
-                                        defaultKeyboardKey: 'ArrowDown'
-                                    },
-                                    {
-                                        emote: true,
-                                        action: 'Rotate Left',
-                                        defaultKeyboardKey: 'ArrowLeft'
-                                    },
-                                    {
-                                        emote: true,
-                                        action: 'Rotate Right',
-                                        defaultKeyboardKey: 'ArrowRight'
-                                    }
                                 ].map(obj =>
                                     <div key={obj.action}>
                                         <div className="flex-header border-bottom pb-1 mb-1">
@@ -122,14 +93,16 @@ export default function FourFrogsSettingsModal({
 
                                             <div>
 
-                                                <div className="badge badge-hover bg-articles me-1">{obj.defaultKeyboardKey}</div>
+                                                <div className="badge badge-hover bg-dark me-1">{obj.defaultKeyboardKey}</div>
 
-                                                <ArticlesButton 
-                                                    className=""
-                                                    small
-                                                >
-                                                    Change Key
-                                                </ArticlesButton>
+                                                {obj.editable &&
+                                                    <ArticlesButton
+                                                        className=""
+                                                        small
+                                                    >
+                                                        Change Key
+                                                    </ArticlesButton>
+                                                }
 
                                             </div>
                                         </div>

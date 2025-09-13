@@ -17,12 +17,19 @@ export const usePlayersStore = create((set) => ({
     },
     setPlayer: (player_id, newValue) => {
         set((prev) => ({
-            players: prev.players.map(player => 
+            players: prev.players.map(player =>
                 player.player_index === player_id ? { ...player, ...newValue } : player
             )
         }))
     },
     populatePlayers: (newValue) => {
+
+        if (typeof window !== "undefined") {
+            const canvasWrap = document.querySelector('.canvas-wrap');
+            if (canvasWrap) {
+                canvasWrap.style.cursor = `url('/img/crosshair.svg') 64 64, auto`;
+            }
+        }
 
         let newPlayers = Array.from({ length: 25 }, (player_obj, player_i) => {
             return {
@@ -54,6 +61,18 @@ export const usePlayersStore = create((set) => ({
     setServerRoomPlayers: (newValue) => {
         set((prev) => ({
             serverRoomPlayers: newValue
+        }))
+    },
+
+    fakeBulletTracker: 3,
+    consumeFakeBullet: () => {
+        set((prev) => ({
+            fakeBulletTracker: prev.fakeBulletTracker - 1
+        }))
+    },
+    setFakeBulletTracker: (newValue) => {
+        set((prev) => ({
+            fakeBulletTracker: newValue
         }))
     },
 

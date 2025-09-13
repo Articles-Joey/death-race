@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useContext, useState, useMemo } from 'react';
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -15,6 +15,7 @@ import { useLocalStorageNew } from '@/hooks/useLocalStorageNew';
 import IsDev from '@/components/UI/IsDev';
 // import { ChromePicker } from 'react-color';
 import { useSocketStore } from '@/hooks/useSocketStore';
+import CreditsModal from '@/components/UI/CreditsModal';
 
 // import GameScoreboard from 'components/Games/GameScoreboard'
 
@@ -56,6 +57,7 @@ export default function DeathRaceLobbyPage() {
     const [nickname, setNickname] = useLocalStorageNew("game:nickname", userReduxState.display_name)
 
     const [showInfoModal, setShowInfoModal] = useState(false)
+    const [showCredits, setShowCredits] = useState(false)
     const [showSettingsModal, setShowSettingsModal] = useState(false)
     const [showPrivateGameModal, setShowPrivateGameModal] = useState(false)
 
@@ -104,6 +106,10 @@ export default function DeathRaceLobbyPage() {
 
     }, [socket.connected]);
 
+    const randomRoom = useMemo(() => {
+        return window.crypto.getRandomValues(new Uint32Array(1))[0];
+    }, []);
+
     return (
 
         <div className="death-race-landing-page">
@@ -112,6 +118,13 @@ export default function DeathRaceLobbyPage() {
                 <InfoModal
                     show={showInfoModal}
                     setShow={setShowInfoModal}
+                />
+            }
+
+            {showCredits &&
+                <CreditsModal
+                    show={showCredits}
+                    setShow={setShowCredits}
                 />
             }
 
@@ -182,6 +195,24 @@ export default function DeathRaceLobbyPage() {
 
                     <div className="card-body">
 
+                        <Link href={`/play?room_play_server=${randomRoom}`}>
+                            <ArticlesButton
+                                size={'lg'}
+                                className={`w-100 mb-0 `}
+                            >
+                                <div className='d-flex align-items-center justify-content-center'>
+                                    <i className="fad fa-phone-laptop fa-2x me-2"></i>
+                                    Room Play
+                                </div>
+                            </ArticlesButton>
+                        </Link>
+
+                        <div className="small text-center mb-3">
+                            Play on one screen with friends via phone.
+                        </div>
+
+                        <hr />
+
                         <div className="fw-bold mb-1 small text-center">
                             {lobbyDetails.players.length || 0} player{lobbyDetails.players.length > 1 && 's'} in the lobby.
                         </div>
@@ -251,7 +282,7 @@ export default function DeathRaceLobbyPage() {
 
                         </div>
 
-                        <div className='small fw-bold  mt-3 mb-1'>Or</div>
+                        {/* <div className='small fw-bold  mt-3 mb-1'>Or</div> */}
 
                         {/* <div className='d-flex'>
 
@@ -337,9 +368,7 @@ export default function DeathRaceLobbyPage() {
                             className={`w-50`}
                             small
                             onClick={() => {
-                                setShowInfoModal({
-                                    game: game_name
-                                })
+                                setShowCredits(true)
                             }}
                         >
                             <i className="fad fa-users"></i>
