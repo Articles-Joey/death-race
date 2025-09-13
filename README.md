@@ -36,3 +36,5 @@ Inspired by the Death Race game mode included in the Hidden in Plain Sight game.
 [Smooth Bullet Icon](https://www.svgrepo.com/svg/180507/bullet-weapons)
 
 [Crosshair Icon](https://www.svgrepo.com/svg/532236/crosshair)
+
+[Farm Field Background](https://www.freepik.com/free-vector/rural-landscape-with-hay-bales-agriculture-farm-field_13875690.htm#fromView=search&page=1&position=2&uuid=8650eeb6-8138-4d32-bc42-785af6f4ca16&query=wheat+fields+cartoon+)

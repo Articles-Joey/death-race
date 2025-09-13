@@ -20,17 +20,34 @@ export default function Cow(props) {
 
   const [randomYRotation] = useState(() => Math.random() * Math.PI * 2);
 
+  // Animation start delay (ms) range
+  const ANIM_DELAY_MIN = 0;
+  const ANIM_DELAY_MAX = 3000;
+
   useEffect(() => {
-    
-        console.log("Actions cow", actions)
-  
-        if (props.action) {
-          actions[props.action].play();
-        } else {
-          actions['Eating'].play();
-        }
-    
-    }, [actions]);
+    let animTimeout;
+    console.log("Actions cow", actions);
+
+    const start = () => {
+      if (props.action && actions[props.action]) {
+        actions[props.action].play();
+      } else if (actions['Eating']) {
+        actions['Eating'].play();
+      }
+    };
+
+    // Random delay before starting animation to stagger cows
+    const delay = ANIM_DELAY_MIN + Math.random() * (ANIM_DELAY_MAX - ANIM_DELAY_MIN);
+    animTimeout = setTimeout(start, delay);
+
+    return () => {
+      clearTimeout(animTimeout);
+      // Stop all actions on unmount to avoid leaks
+      Object.values(actions || {}).forEach(a => {
+        try { a.stop(); } catch (e) {}
+      });
+    };
+  }, [actions, props.action]);
 
   return (
     <group ref={group} {...props} dispose={null} rotation={[0, randomYRotation, 0]}>

@@ -25,10 +25,9 @@ import Rock from "@/components/Models/Rock";
 import { degToRad } from "three/src/math/MathUtils";
 import Cows from "../Models/Cows";
 import { useStore } from "@/hooks/useStore";
+import FinishLine from "../Models/FinishLine";
 
 const defaultMovementSpaces = 2.5
-
-function isOdd(num) { return num % 2; }
 
 function GameCanvas(props) {
 
@@ -203,32 +202,7 @@ function GameCanvas(props) {
                 />
             </group>
 
-            {/* Finish Line */}
-            {[...Array(80)].map((item, i) => {
-                return (
-
-                    <group
-                        key={i}
-                        position={[-40, 0, 60]}
-                        rotation={[-Math.PI / 2, 0, 0]}
-                    >
-                        <mesh position={[0 + i, 1, 0]}>
-                            <planeGeometry attach="geometry" args={[1, 1]} />
-                            <meshStandardMaterial
-                                color={isOdd(i) ? "#fff" : '#000'}
-                            />
-                        </mesh>
-
-                        <mesh position={[0 + i, 2, 0]}>
-                            <planeGeometry attach="geometry" args={[1, 1]} />
-                            <meshStandardMaterial
-                                color={isOdd(i) ? "#000" : '#fff'}
-                            />
-                        </mesh>
-                    </group>
-
-                )
-            })}
+            <FinishLine />
 
             {/* Right of Barns */}
             <group>
