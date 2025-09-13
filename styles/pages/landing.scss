@@ -1,5 +1,16 @@
 @use "@/styles/components/global.scss" as *;
 
+[data-bs-theme="dark"] {
+    
+    .background-wrap {
+
+        img {
+            opacity: 0.25!important;
+        }
+    }
+
+}
+
 .death-race-landing-page {
     flex-grow: 1;
     display: flex;

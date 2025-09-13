@@ -16,6 +16,7 @@ import IsDev from '@/components/UI/IsDev';
 // import { ChromePicker } from 'react-color';
 import { useSocketStore } from '@/hooks/useSocketStore';
 import CreditsModal from '@/components/UI/CreditsModal';
+import { useStore } from '@/hooks/useStore';
 
 // import GameScoreboard from 'components/Games/GameScoreboard'
 
@@ -51,6 +52,9 @@ export default function DeathRaceLobbyPage() {
         socket: state.socket,
     }));
 
+    const theme = useStore(state => state.theme);
+    const toggleTheme = useStore(state => state.toggleTheme);
+
     // const userReduxState = useSelector((state) => state.auth.user_details)
     const userReduxState = false
 
@@ -60,11 +64,16 @@ export default function DeathRaceLobbyPage() {
     const [showCredits, setShowCredits] = useState(false)
     const [showSettingsModal, setShowSettingsModal] = useState(false)
     const [showPrivateGameModal, setShowPrivateGameModal] = useState(false)
+    const [isMounted, setIsMounted] = useState(false);
 
     const [lobbyDetails, setLobbyDetails] = useState({
         players: [],
         games: [],
     })
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     useEffect(() => {
 
@@ -107,7 +116,11 @@ export default function DeathRaceLobbyPage() {
     }, [socket.connected]);
 
     const randomRoom = useMemo(() => {
-        return window.crypto.getRandomValues(new Uint32Array(1))[0];
+
+        if (typeof window !== "undefined") {
+            return window.crypto.getRandomValues(new Uint32Array(1))[0];
+        }
+
     }, []);
 
     return (
@@ -195,7 +208,25 @@ export default function DeathRaceLobbyPage() {
 
                     <div className="card-body">
 
-                        <Link href={`/play?room_play_server=${randomRoom}`}>
+                        {isMounted ?
+                            <>
+                                <Link
+                                    href={`/play?room_play_server=${randomRoom}`}
+                                >
+                                    <ArticlesButton
+                                        size={'lg'}
+                                        className={`w-100 mb-0 `}
+                                    >
+                                        <div className='d-flex align-items-center justify-content-center'>
+                                            <i className="fad fa-phone-laptop fa-2x me-2"></i>
+                                            Room Play
+                                        </div>
+                                    </ArticlesButton>
+                                </Link>
+
+
+                            </>
+                            :
                             <ArticlesButton
                                 size={'lg'}
                                 className={`w-100 mb-0 `}
@@ -205,7 +236,7 @@ export default function DeathRaceLobbyPage() {
                                     Room Play
                                 </div>
                             </ArticlesButton>
-                        </Link>
+                        }
 
                         <div className="small text-center mb-3">
                             Play on one screen with friends via phone.
@@ -373,6 +404,17 @@ export default function DeathRaceLobbyPage() {
                         >
                             <i className="fad fa-users"></i>
                             Credits
+                        </ArticlesButton>
+
+                        <ArticlesButton
+                            small
+                            className="w-50 mt-3"
+                            onClick={() => {
+                                toggleTheme()
+                            }}
+                        >
+                            <i className="fad fa-eye-dropper me-2"></i>
+                            {`Theme: ${theme === 'Dark' ? 'Dark' : 'Light'}`}
                         </ArticlesButton>
 
                     </div>

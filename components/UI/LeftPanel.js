@@ -101,6 +101,7 @@ export default function LeftPanelContent(props) {
                             toggleTheme()
                         }}
                     >
+                        <i className="fad fa-eye-dropper me-2"></i>
                         {`Theme: ${theme === 'Dark' ? 'Dark' : 'Light'}`}
                     </ArticlesButton>
 
