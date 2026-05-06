@@ -23,6 +23,10 @@ There are two forms of multiplayer, Room Play and normal multiplayer.
 - **Room Play**: The game is displayed on a single screen, allowing players in the same room to join using their phones and enjoy the traditional excitement together.
 - **Normal Multiplayer**: Players can join remotely and use their own screens to participate in the game.
 
+## TODO
+
+Create a real scene for the map in Blender, possibly multiple.
+
 ## Inspiration
 
 Inspired by the Death Race game mode included in the Hidden in Plain Sight game. It does not support multiplayer outside local play so wanted to recreate it.

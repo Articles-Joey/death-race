@@ -38,9 +38,17 @@ export default function LeftPanelContent(props) {
     const theme = useStore(state => state.theme);
     const toggleTheme = useStore(state => state.toggleTheme);
 
+    const darkMode = useStore(state => state.darkMode);
+    const setDarkMode = useStore(state => state.setDarkMode);
+
+    const sidebar = useStore(state => state.sidebar);
+    const toggleSidebar = useStore(state => state.toggleSidebar);
+
+    const setShowSettingsModal = useStore((state) => state.setShowSettingsModal);
+
     const fakeBulletTracker = usePlayersStore(state => state.fakeBulletTracker);
     // const players = usePlayersStore(state => state.players);
-    // const setPlayers = usePlayersStore(state => state.setPlayers);
+    const setPlayers = usePlayersStore(state => state.setPlayers);
     const populatePlayers = usePlayersStore(state => state.populatePlayers);
     const serverGameState = usePlayersStore(state => state.serverGameState);
     const serverRoomPlayers = usePlayersStore(state => state.serverRoomPlayers);
@@ -65,45 +73,72 @@ export default function LeftPanelContent(props) {
                         <div>Players: {0}/4</div>
                     </div>
 
-                    <Link
-                        href={'/'}
-                    >
-                        <ArticlesButton
+                    <div className="d-flex flex-wrap">
+
+                        <Link
+                            href={'/'}
                             className="w-50"
-                            small
                         >
-                            <i className="fad fa-arrow-alt-square-left"></i>
-                            <span>Leave Game</span>
+                            <ArticlesButton
+                                className="w-100"
+                                small
+                            >
+                                <i className="fad fa-arrow-alt-square-left"></i>
+                                <span>Leave Game</span>
+                            </ArticlesButton>
+                        </Link>
+    
+                        <ArticlesButton
+                            small
+                            className="w-50"
+                            active={isFullscreen}
+                            onClick={() => {
+                                if (isFullscreen) {
+                                    exitFullscreen()
+                                } else {
+                                    requestFullscreen('death-race-game-page')
+                                }
+                            }}
+                        >
+                            {isFullscreen && <span>Exit </span>}
+                            {!isFullscreen && <span><i className='fad fa-expand'></i></span>}
+                            <span>Fullscreen</span>
                         </ArticlesButton>
-                    </Link>
-
-                    <ArticlesButton
-                        small
-                        className="w-50"
-                        active={isFullscreen}
-                        onClick={() => {
-                            if (isFullscreen) {
-                                exitFullscreen()
-                            } else {
-                                requestFullscreen('death-race-game-page')
-                            }
-                        }}
-                    >
-                        {isFullscreen && <span>Exit </span>}
-                        {!isFullscreen && <span><i className='fad fa-expand'></i></span>}
-                        <span>Fullscreen</span>
-                    </ArticlesButton>
-
-                    <ArticlesButton
-                        small
-                        className="w-50"
-                        onClick={() => {
-                            toggleTheme()
-                        }}
-                    >
-                        <i className="fad fa-eye-dropper me-2"></i>
-                        {`Theme: ${theme === 'Dark' ? 'Dark' : 'Light'}`}
-                    </ArticlesButton>
+    
+                        <div className='d-flex w-50'>
+                            <ArticlesButton
+                                className={`w-100`}
+                                small
+                                onClick={() => {
+                                    setShowSettingsModal(prev => !prev)
+                                }}
+                            >
+                                <i className="fad fa-cog"></i>
+                                Settings
+                            </ArticlesButton>
+                            <ArticlesButton
+                                className={``}
+                                small
+                                onClick={() => {
+                                    setDarkMode(!darkMode);
+                                }}
+                            >
+                                <i className="fad fa-palette"></i>
+                            </ArticlesButton>
+                        </div>
+    
+                        <ArticlesButton
+                            small
+                            className='w-50'
+                            active={sidebar}
+                            onClick={() => {
+                                toggleSidebar()
+                            }}
+                        >
+                            <i className="fad fa-cog"></i>
+                            <span>Sidebar</span>
+                        </ArticlesButton>
+                    </div>
 
                     {!socket?.connected &&
                         <div
@@ -238,7 +273,7 @@ export default function LeftPanelContent(props) {
             </div> */}
 
             {/* Touch Controls */}
-            <div
+            {/* <div
                 className="card card-articles card-sm"
             >
                 <div className="card-body">
@@ -276,7 +311,7 @@ export default function LeftPanelContent(props) {
                     </div>
 
                 </div>
-            </div>
+            </div> */}
 
             {/* Debug Controls */}
             <div
@@ -319,6 +354,18 @@ export default function LeftPanelContent(props) {
                                 <i className="fad fa-redo"></i>
                                 populatePlayers
                             </ArticlesButton>
+
+                            <ArticlesButton
+                                size="sm"
+                                className="w-50"
+                                onClick={() => {
+                                    setPlayers([])
+                                }}
+                            >
+                                <i className="fad fa-redo"></i>
+                                setPlayers
+                            </ArticlesButton>
+                            
                         </div>
 
                     </div>

@@ -11,7 +11,7 @@ import { isAfter } from "date-fns";
 import { useSocketStore } from "@/hooks/useSocketStore";
 import { useThree } from "@react-three/fiber";
 
-export default function Player({
+function Player({
     item,
     defaultMovementSpaces
 }) {
@@ -242,4 +242,4 @@ export default function Player({
     )
 }
 
-// export default memo(Player)
+export default memo(Player)

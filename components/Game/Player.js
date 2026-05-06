@@ -10,20 +10,14 @@ import { Model as ModelSpacesuitMen } from "@/components/Models/Spacesuit";
 import { isAfter } from "date-fns";
 import { useSocketStore } from "@/hooks/useSocketStore";
 
-export default function Player({
+function Player({
     item,
     defaultMovementSpaces
 }) {
 
-    const {
-        players,
-        setPlayers,
-        setPlayer,
-        populatePlayers,
-        winner,
-        setWinner,
-        serverGameState
-    } = usePlayersStore()
+    const setPlayer = usePlayersStore(state => state.setPlayer);
+    const winner = usePlayersStore(state => state.winner);
+    const setWinner = usePlayersStore(state => state.setWinner);
 
     const {
         socket
@@ -87,7 +81,7 @@ export default function Player({
 
         // return () => clearTimeout(moveTimeout); // Cleanup on component unmount
 
-    }, [item, setPlayer, winner]);
+    }, [item.x, item.player_index, winner, setWinner]);
 
     // useFrame(() => {
     //     if (ref.current) {
@@ -118,7 +112,7 @@ export default function Player({
 
                 socket.emit('game:death-race:shoot', {
                     player_index: item.player_index,
-                    server_id: serverGameState.server_id
+                    server_id: usePlayersStore.getState().serverGameState.server_id
                 });
 
                 return
@@ -160,4 +154,4 @@ export default function Player({
     )
 }
 
-// export default memo(Player)
+export default memo(Player)

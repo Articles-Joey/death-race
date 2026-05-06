@@ -21,15 +21,11 @@ export function Model(props) {
   const { previewConfig } = props
 
   useEffect(() => {
+    if (!actions || Object.keys(actions).length === 0) return;
 
-    console.log("Actions", actions)
+    const actionName = props.action || 'Idle';
     Object.values(actions).forEach((a) => a.stop());
-
-    if (props.action) {
-      actions[props.action].play();
-    } else {
-      actions[`Idle`].play();
-    }
+    actions[actionName]?.play();
 
   }, [actions, props.action]);
 

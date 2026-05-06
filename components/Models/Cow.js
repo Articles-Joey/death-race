@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.5.2 models\Cow.gltf --output output\Cow.js --transform --
 Files: models\Cow.gltf [3.11MB] > F:\My Documents\Articles Media\AMCOT\Models\Quaternius\Animals\JSX\output\Cow-transformed.glb [543.49KB] (83%)
 */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
@@ -19,14 +19,18 @@ export default function Cow(props) {
   const { actions } = useAnimations(animations, group)
 
   const [randomYRotation] = useState(() => Math.random() * Math.PI * 2);
+  const hasStarted = useRef(false);
 
   // Animation start delay (ms) range
   const ANIM_DELAY_MIN = 0;
   const ANIM_DELAY_MAX = 3000;
 
   useEffect(() => {
+    // Guard: only start animations once, when actions are first available
+    if (hasStarted.current || !actions || Object.keys(actions).length === 0) return;
+    hasStarted.current = true;
+
     let animTimeout;
-    console.log("Actions cow", actions);
 
     const start = () => {
       if (props.action && actions[props.action]) {

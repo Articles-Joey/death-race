@@ -4,21 +4,17 @@ import { useEffect, useContext, useState, useRef, useMemo } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 // import Link from 'next/link';
 import dynamic from 'next/dynamic'
-// import Script from 'next/script'
 
-import ArticlesButton from '@/components/UI/Button';
+import GameMenu from '@articles-media/articles-dev-box/GameMenu';
 
 import useFullscreen from '@/hooks/useFullScreen';
-// import { useControllerStore } from '@/hooks/useControllerStore';
-// import ControllerPreview from '@/components/Games/ControllerPreview';
-// import { useGameStore } from '@/components/Games/Ocean Rings/hooks/useGameStore';
-// import { Dropdown, DropdownButton } from 'react-bootstrap';
-// import TouchControls from 'app/(site)/community/games/glass-ceiling/components/UI/TouchControls';
-import { useLocalStorageNew } from '@/hooks/useLocalStorageNew';
-import LeftPanelContent from '@/components/UI/LeftPanel';
+
 import { useSocketStore } from '@/hooks/useSocketStore';
 import { usePlayersStore } from '@/hooks/usePlayersStore';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { useStore } from '@/hooks/useStore';
+import classNames from 'classnames';
+import LeftPanelContent from '@/components/UI/LeftPanel';
 // import routes from '@/components/constants/routes';
 
 const ArticlesModal = dynamic(() => import('@/components/UI/ArticlesModal'), {
@@ -37,6 +33,8 @@ const cursorImgUrls = [
 ];
 
 export default function DeathRaceGamePage() {
+
+    const nickname = useStore((state) => state.nickname);
 
     const fakeBulletTracker = usePlayersStore(state => state.fakeBulletTracker);
     const setFakeBulletTracker = usePlayersStore(state => state.setFakeBulletTracker);
@@ -144,7 +142,7 @@ export default function DeathRaceGamePage() {
         if (server && socket.connected) {
             socket.emit('join-room', `game:death-race-room-${server}`, {
                 server_id: server,
-                nickname: JSON.parse(localStorage.getItem('game:nickname')),
+                nickname: nickname,
                 client_version: '1',
             });
         }
@@ -170,44 +168,24 @@ export default function DeathRaceGamePage() {
 
     }, []);
 
-    const [showMenu, setShowMenu] = useState(false)
-
-    const [touchControlsEnabled, setTouchControlsEnabled] = useLocalStorageNew("game:touchControlsEnabled", false)
-
-    const [sceneKey, setSceneKey] = useState(0);
-
     const [gameState, setGameState] = useState(false)
 
-    // Function to handle scene reload
-    const reloadScene = () => {
-        setFakeBulletTracker(3);
-        setWinner(false)
-        setSceneKey((prevKey) => prevKey + 1);
-    };
-
-    const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen();
-
-
-
-    let panelProps = {
-        server,
-        players,
-        touchControlsEnabled,
-        setTouchControlsEnabled,
-        reloadScene,
-        // controllerState,
-        isFullscreen,
-        requestFullscreen,
-        exitFullscreen,
-        setShowMenu
-    }
+    const sceneKey = useStore(state => state.sceneKey)
+    const menuOpen = useStore(state => state.menuOpen)
+    const sidebar = useStore(state => state.sidebar)
 
     return (
 
         <div
-            className={`death-race-game-page ${isFullscreen && 'fullscreen'}`}
-            id="death-race-game-page"
-            data-test={winner}
+            className={classNames(
+                `${process.env.NEXT_PUBLIC_GAME_KEY}-game-page`,
+                {
+                    'menu-open': menuOpen,
+                    'fullscreen': useFullscreen().isFullscreen,
+                    'show-sidebar': sidebar,
+                }
+            )}
+            id={`${process.env.NEXT_PUBLIC_GAME_KEY}-game-page`}
         >
 
             {winner !== false &&
@@ -234,7 +212,19 @@ export default function DeathRaceGamePage() {
                 </ArticlesModal>
             }
 
-            <div className="menu-bar card card-articles p-1 justify-content-center">
+            <GameMenu
+                useStore={useStore}
+                LeftPanelContent={LeftPanelContent}
+                menuBarConfig={{
+                    style: "Corner Button",
+                    menuBarButtonPosition: "Left"
+                }}
+                sidebarConfig={{
+                    style: "Static Panel",
+                }}
+            />
+
+            {/* <div className="menu-bar card card-articles p-1 justify-content-center">
 
                 <div className='flex-header align-items-center'>
 
@@ -263,25 +253,25 @@ export default function DeathRaceGamePage() {
 
                 </div>
 
-            </div>
+            </div> */}
 
-            <div className={`mobile-menu ${showMenu && 'show'}`}>
+            {/* <div className={`mobile-menu ${showMenu && 'show'}`}>
                 <LeftPanelContent
                     {...panelProps}
                 />
-            </div>
+            </div> */}
 
             {/* <TouchControls
                 touchControlsEnabled={touchControlsEnabled}
             /> */}
 
-            <div className='panel-left card rounded-0 d-none d-lg-flex'>
+            {/* <div className='panel-left card rounded-0 d-none d-lg-flex'>
 
                 <LeftPanelContent
                     {...panelProps}
                 />
 
-            </div>
+            </div> */}
 
             {/* <div className='game-info'>
                 <div className="card card-articles card-sm">

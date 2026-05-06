@@ -1,4 +1,4 @@
-import { Canvas, useFrame } from "@react-three/fiber"
+import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { Sky, useDetectGPU, useTexture, OrbitControls, Image } from "@react-three/drei";
 
 import { memo, useEffect, useMemo, useRef, useState } from "react";
@@ -27,9 +27,30 @@ import Cows from "../Models/Cows";
 import { useStore } from "@/hooks/useStore";
 import FinishLine from "../Models/FinishLine";
 
+const LANDING_CAMERA_RADIUS = 50;
+const LANDING_CAMERA_HEIGHT = 30;
+const LANDING_CAMERA_SPEED = 0.15;
+
+function LandingCamera() {
+    const { camera } = useThree();
+    const angle = useRef(0);
+
+    useFrame((_, delta) => {
+        angle.current += delta * LANDING_CAMERA_SPEED;
+        camera.position.x = Math.sin(angle.current) * LANDING_CAMERA_RADIUS;
+        camera.position.z = Math.cos(angle.current) * LANDING_CAMERA_RADIUS;
+        camera.position.y = LANDING_CAMERA_HEIGHT;
+        camera.lookAt(0, 0, 0);
+    });
+
+    return null;
+}
+
 const defaultMovementSpaces = 2.5
 
-function GameCanvas(props) {
+function GameCanvas({
+    landingAnimation
+}) {
 
     // const GPUTier = useDetectGPU()
 
@@ -43,6 +64,7 @@ function GameCanvas(props) {
     // } = props;
 
     const theme = useStore(state => state.theme);
+    const darkMode = useStore(state => state.darkMode);
 
     const players = usePlayersStore(state => state.players);
     const setPlayers = usePlayersStore(state => state.setPlayers);
@@ -110,13 +132,14 @@ function GameCanvas(props) {
     }
 
     return (
-        <Canvas camera={{ position: [-10, 40, 40], fov: 50 }}>
+        <Canvas camera={{ position: [-95, 55, 0], fov: 50 }}>
 
-            <OrbitControls
-            // autoRotate={gameState?.status == 'In Lobby'}
-            />
+            {landingAnimation
+                ? <LandingCamera />
+                : <OrbitControls />
+            }
 
-            {theme == "Light" ?
+            {!darkMode ?
                 <>
                     <Sky
                         // distance={450000}
@@ -312,12 +335,12 @@ function GameCanvas(props) {
 
             <Cows />
 
-            {theme == "Dark" && <>
+            {darkMode && <>
                 <ambientLight intensity={0.25} />
                 <spotLight intensity={10000} position={[-50, 100, 50]} angle={5} penumbra={1} />
             </>}
 
-            {theme == "Light" && <>
+            {!darkMode && <>
                 <ambientLight intensity={5} />
                 <spotLight intensity={30000} position={[-50, 100, 50]} angle={5} penumbra={1} />
             </>}
@@ -330,9 +353,9 @@ function GameCanvas(props) {
             />
 
             {/* Black overlay for night mode */}
-            {theme == "Dark" && (
+            {darkMode && (
                 <mesh
-                    position={[0, 20 - 1 + 0.01, -99]}
+                    position={[0, 20 - 1 + 0.01, -99.8]}
                     rotation={[0, 0, 0]}
                 >
                     <planeGeometry args={[150, 40]} />
@@ -348,9 +371,9 @@ function GameCanvas(props) {
             />
 
             {/* Black overlay for night mode (back image) */}
-            {theme == "Dark" && (
+            {darkMode && (
                 <mesh
-                    position={[0, 20 - 1 + 0.01, 99]}
+                    position={[0, 20 - 1 + 0.01, 99.8]}
                     rotation={[0, degToRad(180), 0]}
                 >
                     <planeGeometry args={[150, 40]} />

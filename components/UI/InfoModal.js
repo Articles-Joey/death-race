@@ -90,234 +90,73 @@ export default function GameInfoModal({
             >
 
                 <Modal.Header closeButton>
-                    <Modal.Title>Game Info</Modal.Title>
+                    <Modal.Title>Death Race Game Info</Modal.Title>
                 </Modal.Header>
 
-                <Modal.Body className="flex-column p-0">
+                <Modal.Body className="flex-column py-3">
 
-                    {!registeredGames.includes(show.game) &&
-                        <IsDev>
-                            <div className="p-3">
-
-                                {userReduxState?.roles?.isDev &&
-                                    <div className="bg-light border p-1">
-                                        Global game info modal does not have this game registered.
-                                    </div>
-                                }
-
-                            </div>
-                        </IsDev>
-                    }
-
-                    <div className="p-3">
+                    <div className="px-3">
 
                         <div className="fw-bold mb-2">
-                            {show.game || 'No game property provided'}
+                            Race to the end of the map before your opponents. Avoid being detected by the sniper by blending in with the NPC movements around you.
+                        </div>
+
+                        <div className="mb-2">
+                            Runners - By holding the movement button periodically, runners can move across the map while trying to avoid being spotted by the sniper.
                         </div>
 
                         <div className="">
-                            {show?.item?.short_description}
+                            Snipers - With 3 bullets (adjustable in settings), snipers must carefully aim and time their shots to eliminate runners before they reach the end of the map. Choose your shots wisely, you need to spot the real players among the NPCs to successfully win the round.
                         </div>
 
                     </div>
 
-                    <hr />
+                    <hr className="py-0" />
 
-                    {show?.item?.welcome &&
-                        <div className="p-3 py-2 border-bottom">
+                    <div className="px-3 border-bottom">
 
-                            <b>Welcome to {show?.item?.name}</b>
-                            <p className='small mb-2'>
-                                {show?.item?.welcome?.preview_text}
-                            </p>
-
-                            <div className="ratio ratio-16x9">
-                                <img src={show?.item?.welcome?.preview_gif} alt="" />
-                            </div>
-
+                        <div className="mb-2 fw-bold">Inspiration</div>
+                        <div className="mb-2">
+                            Inspiration for Death Race came from an Xbox Arcade game back in the day. That game is also available on Steam if you want to check it out for yourself.
                         </div>
-                    }
 
-                    <hr />
+                        <div style={{ position: 'relative' }} className="mb-3">
+                            <a 
+                                href="https://store.steampowered.com/app/303590/Hidden_in_Plain_Sight/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Hidden in Plain Sight on Steam"
+                            >
+                                <img
+                                    src={"img/hidden-in-plain-sight.webp"}
+                                    style={{
+                                        objectFit: "contain",
+                                        width: "100%",
+                                    }}
+                                ></img>
+                            </a>
+                        </div>
 
-                    {show.game == 'Battle Trap' &&
-                        <div className="p-3 py-1">
+                        <div className="inspiration-video-wrapper">
 
-                            <div className="mb-3">
-                                <b>Credits</b>
-                            </div>
+                            <div style={{ position: 'relative' }} className="ratio ratio-16x9 bg-dark">
 
-                            <div className="d-flex align-items-center mb-3">
-
-                                <div className="me-3">
-                                    <i className="fad fa-link fa-2x me-0"></i>
-                                </div>
-
-                                <div>
-                                    <ViewUserModal
-                                        user_id={"5e90cc96579a17440c5d7d52"}
-                                        dangerousPopulate
-                                    />
-                                    <div className="">Developer</div>
-                                </div>
-
-                            </div>
-
-                            <div className="d-flex align-items-center mb-3">
-
-                                <div className="me-3">
-                                    <i className="fad fa-link fa-2x me-0"></i>
-                                </div>
-
-                                <div className="">
-                                    <div className="fw-bold">Articles Media</div>
-                                    <div className="">Publisher</div>
-                                </div>
-
-                            </div>
-
-                            <div className="d-flex mb-3">
-
-                                <div className="me-3">
-                                    <i className="fad fa-link fa-2x me-0"></i>
-                                </div>
-
-                                <div>
-                                    <a href="https://sketchfab.com/3d-models/low-poly-chopper-aec69c979166446eb2c8e1503f570d26" target='_blank' rel="noreferrer" className="fw-bold">sketchfab.com/ArtyomOganesyan</a>
-                                    <div className="small text-muted">Used for</div>
-                                    <ul>
-                                        <li>Low Poly Chopper</li>
-                                    </ul>
-                                </div>
-
-                            </div>
-
-                            <div className="d-flex mb-3">
-
-                                <div className="me-3">
-                                    <i className="fad fa-link fa-2x me-0"></i>
-                                </div>
-
-                                <div>
-                                    <a href="https://sketchfab.com/supakorn.pim" target='_blank' rel="noreferrer" className="fw-bold">sketchfab.com/supakorn.pim</a>
-                                    <div className="small text-muted">Used for</div>
-                                    <ul>
-                                        <li>Low Poly Scooter</li>
-                                    </ul>
-                                </div>
-
-                            </div>
-
-                            <div className="d-flex mb-3">
-
-                                <div className="me-3">
-                                    <i className="fad fa-link fa-2x me-0"></i>
-                                </div>
-
-                                <div>
-                                    <a href="https://sketchfab.com/1-3D.com" target='_blank' rel="noreferrer" className="fw-bold">sketchfab.com/1-3D.com</a>
-                                    <div className="small text-muted">Used for</div>
-                                    <ul>
-                                        <li>Low Poly Tricycle</li>
-                                    </ul>
-                                </div>
-
-                            </div>
-
-                            <div className="d-flex mb-3">
-
-                                <div className="me-3">
-                                    <i className="fad fa-link fa-2x me-0"></i>
-                                </div>
-
-                                <div>
-                                    <a href="https://sketchfab.com/BeastSri" target='_blank' rel="noreferrer" className="fw-bold">sketchfab.com/BeastSri</a>
-                                    <div className="small text-muted">Used for</div>
-                                    <ul>
-                                        <li>Low Poly Unicycle</li>
-                                    </ul>
-                                </div>
-
-                            </div>
-
-                            <div className="d-flex mb-3">
-
-                                <div className="me-3">
-                                    <i className="fad fa-link fa-2x me-0"></i>
-                                </div>
-
-                                <div>
-                                    <a href="https://sketchfab.com/SebastianScaini" target='_blank' rel="noreferrer" className="fw-bold">sketchfab.com/SebastianScaini</a>
-                                    <div className="small text-muted">Used for</div>
-                                    <ul>
-                                        <li>Toilet Tricycle</li>
-                                    </ul>
-                                </div>
+                                <iframe
+                                    width="100%"
+                                    height="100%"
+                                    src={`https://www.youtube.com/embed/${"y8ePjBtAVck"}`}
+                                    title="YouTube video player"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowFullScreen
+                                ></iframe>
 
                             </div>
 
                         </div>
-                    }
 
-                    {show?.item?.inspiration &&
-                        <div className="p-3 border-bottom">
-                            <div className="mb-2 fw-bold">Inspiration</div>
-                            <div>{show?.item?.inspiration?.text}</div>
-                            {show?.item?.inspiration?.video &&
-                                <div className="inspiration-video-wrapper">
 
-                                    {!showVideo &&
-                                        <div
-                                            className="play-button"
-                                            onClick={() => {
-                                                setShowVideo(true)
-                                            }}
-                                        >
-                                            <div><i style={{ color: 'red' }} className="fab fa-youtube fa-4x me-0"></i></div>
-                                            <div className="label">Play Video</div>
-                                        </div>
-                                    }
-
-                                    <div style={{ position: 'relative' }} className="ratio ratio-16x9 bg-dark">
-
-                                        {showVideo ?
-                                            <iframe
-                                                width="100%"
-                                                height="100%"
-                                                src={`https://www.youtube.com/embed/${show?.item?.inspiration?.video}?autoplay=1&mute=1`}
-                                                title="YouTube video player"
-                                                frameBorder="0"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                                allowFullScreen
-                                            ></iframe>
-                                            :
-                                            <>
-                                                {/* <img
-                                                    onClick={() => {
-                                                        setShowVideo(true)
-                                                    }}
-                                                    src={`${process.env.NEXT_PUBLIC_CDN}games/Race Game/inspo-animation.webp`}
-                                                    fill
-                                                    alt=""
-                                                    style={{ objectFit: 'contain', maxWidth: '100%' }}
-                                                    loading="lazy"
-                                                /> */}
-                                            </>
-                                        }
-
-                                    </div>
-
-                                </div>
-                            }
-                        </div>
-                    }
-
-                    {show?.item?.attributions &&
-                        <div className="p-3">
-                            <div className="mb-2 fw-bold">Attributions</div>
-                            <div>{show?.item?.attributions}</div>
-                        </div>
-                    }
+                    </div>
 
                 </Modal.Body>
 

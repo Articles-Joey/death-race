@@ -5,44 +5,44 @@ import Image from 'next/image'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 
-// import { useSelector, useDispatch } from 'react-redux'
-
-// import ROUTES from 'components/constants/routes'
-
 import ArticlesButton from '@/components/UI/Button';
-// import SingleInput from '@/components/Articles/SingleInput';
-import { useLocalStorageNew } from '@/hooks/useLocalStorageNew';
 import IsDev from '@/components/UI/IsDev';
-// import { ChromePicker } from 'react-color';
 import { useSocketStore } from '@/hooks/useSocketStore';
-import CreditsModal from '@/components/UI/CreditsModal';
 import { useStore } from '@/hooks/useStore';
 
-// import GameScoreboard from 'components/Games/GameScoreboard'
+import logo from '@/app/icon.png'
 
-// const Ad = dynamic(() => import('components/Ads/Ad'), {
-//     ssr: false,
-// });
+import useUserDetails from '@articles-media/articles-dev-box/useUserDetails';
+import useUserToken from '@articles-media/articles-dev-box/useUserToken';
+import NicknameInput from '@articles-media/articles-dev-box/NicknameInput';
+import GameMenuPrimaryButtonGroup from '@articles-media/articles-dev-box/GameMenuPrimaryButtonGroup';
+import SessionButton from '@articles-media/articles-dev-box/SessionButton';
 
-const InfoModal = dynamic(
-    () => import('@/components/UI/InfoModal'),
+const ReturnToLauncherButton = dynamic(() =>
+    import('@articles-media/articles-dev-box/ReturnToLauncherButton'),
     { ssr: false }
-)
-
-const SettingsModal = dynamic(
-    () => import('@/components/SettingsModal'),
+);
+const GameScoreboard = dynamic(() =>
+    import('@articles-media/articles-dev-box/GameScoreboard'),
     { ssr: false }
-)
+);
+const Ad = dynamic(() =>
+    import('@articles-media/articles-dev-box/Ad'),
+    { ssr: false }
+);
 
-// const PrivateGameModal = dynamic(
-//     () => import('@/components/PrivateGameModal'),
-//     { ssr: false }
-// )
-
-const assets_src = 'games/Cannon/'
-
-const game_key = 'death-race'
-const game_name = 'Death Race'
+const LandingBackgroundAnimation = dynamic(() =>
+    import('@/components/Game/LandingBackgroundAnimation'),
+    {
+        ssr: false,
+        loading: () => <Image
+            src={`${process.env.NEXT_PUBLIC_CDN}games/Death Race/death-race-background.jpg`}
+            alt=""
+            fill
+            style={{ objectFit: 'cover', objectPosition: 'center', filter: 'blur(10px)' }}
+        />
+    }
+);
 
 export default function DeathRaceLobbyPage() {
 
@@ -52,36 +52,38 @@ export default function DeathRaceLobbyPage() {
         socket: state.socket,
     }));
 
-    const theme = useStore(state => state.theme);
-    const toggleTheme = useStore(state => state.toggleTheme);
+    const {
+        data: userToken,
+        error: userTokenError,
+        isLoading: userTokenLoading,
+        mutate: userTokenMutate
+    } = useUserToken(
+        process.env.NEXT_PUBLIC_GAME_PORT
+    );
 
-    // const userReduxState = useSelector((state) => state.auth.user_details)
-    const userReduxState = false
+    const {
+        data: userDetails,
+        error: userDetailsError,
+        isLoading: userDetailsLoading,
+        mutate: userDetailsMutate
+    } = useUserDetails({
+        token: userToken
+    });
 
-    const [nickname, setNickname] = useLocalStorageNew("game:nickname", userReduxState.display_name)
+    const darkMode = useStore(state => state.darkMode);
 
-    const [showInfoModal, setShowInfoModal] = useState(false)
-    const [showCredits, setShowCredits] = useState(false)
-    const [showSettingsModal, setShowSettingsModal] = useState(false)
-    const [showPrivateGameModal, setShowPrivateGameModal] = useState(false)
+    const landingAnimation = useStore((state) => state.landingAnimation);
+
     const [isMounted, setIsMounted] = useState(false);
 
-    const [lobbyDetails, setLobbyDetails] = useState({
-        players: [],
-        games: [],
-    })
+    const lobbyDetails = useStore((state) => state.lobbyDetails)
+    const setLobbyDetails = useStore((state) => state.setLobbyDetails)
 
     useEffect(() => {
         setIsMounted(true);
     }, []);
 
     useEffect(() => {
-
-        setShowInfoModal(localStorage.getItem('game:four-frogs:rulesAnControls') === 'true' ? true : false)
-
-        // if (userReduxState._id) {
-        //     console.log("Is user")
-        // }
 
         socket.on('game:death-race-landing-details', function (msg) {
             console.log('game:death-race-landing-details', msg)
@@ -96,12 +98,6 @@ export default function DeathRaceLobbyPage() {
         };
 
     }, [])
-
-    useEffect(() => {
-
-        localStorage.setItem('game:four-frogs:rulesAnControls', showInfoModal)
-
-    }, [showInfoModal])
 
     useEffect(() => {
 
@@ -125,305 +121,261 @@ export default function DeathRaceLobbyPage() {
 
     return (
 
-        <div className="death-race-landing-page">
-
-            {showInfoModal &&
-                <InfoModal
-                    show={showInfoModal}
-                    setShow={setShowInfoModal}
-                />
-            }
-
-            {showCredits &&
-                <CreditsModal
-                    show={showCredits}
-                    setShow={setShowCredits}
-                />
-            }
-
-            {showSettingsModal &&
-                <SettingsModal
-                    show={showSettingsModal}
-                    setShow={setShowSettingsModal}
-                />
-            }
-
-            {/* {showPrivateGameModal &&
-                <PrivateGameModal
-                    show={showPrivateGameModal}
-                    setShow={setShowPrivateGameModal}
-                />
-            } */}
+        <div className="landing-page">
 
             <div className='background-wrap'>
-                <Image
-                    src={`${process.env.NEXT_PUBLIC_CDN}games/Death Race/death-race-background.jpg`}
-                    alt=""
-                    fill
-                    style={{ objectFit: 'cover', objectPosition: 'center', filter: 'blur(10px)' }}
-                />
+                {landingAnimation ?
+                    <>
+                        <LandingBackgroundAnimation />
+                    </>
+                    :
+                    <Image
+                        src={`${process.env.NEXT_PUBLIC_CDN}games/Death Race/death-race-background.jpg`}
+                        alt=""
+                        fill
+                        style={{ objectFit: 'cover', objectPosition: 'center', filter: 'blur(10px)' }}
+                    />
+                }
             </div>
 
             <div className="container d-flex flex-column-reverse flex-lg-row justify-content-center align-items-center">
 
                 <div
-                    className="card card-articles card-sm mb-3 mb-lg-0"
                     style={{ "width": "20rem" }}
                 >
 
-                    {/* <div style={{ position: 'relative', height: '200px' }}>
-                        <Image
-                            src={Logo}
-                            alt=""
-                            fill
+                    <div 
+                        style={{ 
+                            position: 'relative'
+                        }}
+                        className="mb-3 text-center"
+                    >
+
+                        <img
+                            src={logo.src}
+                            alt="Game Logo"
+                            width={150}
+                            className="d-flex mx-auto"
+                            // fill
                             style={{ objectFit: 'cover' }}
                         />
-                    </div> */}
 
-                    <div className='card-header d-flex align-items-center'>
+                        <h1>{process.env.NEXT_PUBLIC_GAME_NAME}</h1>
 
-                        <div className="flex-grow-1">
-
-                            <div className="form-group articles mb-0">
-                                <label htmlFor="nickname">Nickname</label>
-                                {/* <SingleInput
-                                    value={nickname}
-                                    setValue={setNickname}
-                                    noMargin
-                                /> */}
-                                <input
-                                    type="text"
-                                    value={nickname}
-                                    onChange={(e) => {
-                                        setNickname(e.target.value)
-                                    }}
-                                    className={`form-control form-control-sm`}
-                                />
-                            </div>
-
-                            <div className='mt-1' style={{ fontSize: '0.8rem' }}>Visible to all players</div>
-
-                        </div>
                     </div>
 
-                    <div className="card-body">
+                    <div
+                        className="card card-articles card-sm mb-3"
+                    >
 
-                        {isMounted ?
-                            <>
-                                <Link
-                                    href={`/play?room_play_server=${randomRoom}`}
-                                >
-                                    <ArticlesButton
-                                        size={'lg'}
-                                        className={`w-100 mb-0 `}
+                        <div className='card-header d-flex align-items-center'>
+
+                            <NicknameInput
+                                useStore={useStore}
+                            />
+
+                        </div>
+
+                        <div className="card-body">
+
+                            {isMounted ?
+                                <>
+                                    <Link
+                                        href={`/play?room_play_server=${randomRoom}`}
                                     >
-                                        <div className='d-flex align-items-center justify-content-center'>
-                                            <i className="fad fa-phone-laptop fa-2x me-2"></i>
-                                            Room Play
-                                        </div>
-                                    </ArticlesButton>
-                                </Link>
-
-
-                            </>
-                            :
-                            <ArticlesButton
-                                size={'lg'}
-                                className={`w-100 mb-0 `}
-                            >
-                                <div className='d-flex align-items-center justify-content-center'>
-                                    <i className="fad fa-phone-laptop fa-2x me-2"></i>
-                                    Room Play
-                                </div>
-                            </ArticlesButton>
-                        }
-
-                        <div className="small text-center mb-3">
-                            Play on one screen with friends via phone.
-                        </div>
-
-                        <hr />
-
-                        <div className="fw-bold mb-1 small text-center">
-                            {lobbyDetails.players.length || 0} player{lobbyDetails.players.length > 1 && 's'} in the lobby.
-                        </div>
-
-                        {/* <div className='small fw-bold'>Public Servers</div> */}
-
-                        <div className="servers">
-
-                            {[1, 2, 3, 4].map(id => {
-
-                                let lobbyLookup = lobbyDetails?.fourFrogsGlobalState?.games?.find(lobby =>
-                                    parseInt(lobby.server_id) == id
-                                )
-
-                                return (
-                                    <div key={id} className="server">
-
-                                        <div className='d-flex justify-content-between align-items-center w-100 mb-2'>
-                                            <div className="mb-0" style={{ fontSize: '0.9rem' }}><b>Server {id}</b></div>
-                                            <div className='mb-0'>{lobbyLookup?.players?.length || 0}/4</div>
-                                        </div>
-
-                                        <div className='d-flex justify-content-around w-100 mb-1'>
-                                            {[1, 2, 3, 4].map(player_count => {
-
-                                                let playerLookup = false
-
-                                                if (lobbyLookup?.players?.length >= player_count) playerLookup = true
-
-                                                return (
-                                                    <div key={player_count} className="icon" style={{
-                                                        width: '20px',
-                                                        height: '20px',
-                                                        ...(playerLookup ? {
-                                                            backgroundColor: 'black',
-                                                        } : {
-                                                            backgroundColor: 'gray',
-                                                        }),
-                                                        border: '1px solid black'
-                                                    }}>
-
-                                                    </div>
-                                                )
-                                            })}
-                                        </div>
-
-                                        <Link
-                                            className={``}
-                                            href={{
-                                                pathname: `/play`,
-                                                query: {
-                                                    server: id
-                                                }
-                                            }}
+                                        <ArticlesButton
+                                            size={'lg'}
+                                            className={`w-100 mb-0 `}
                                         >
-                                            <ArticlesButton
-                                                className="px-5"
-                                                small
-                                            >
-                                                Join
-                                            </ArticlesButton>
-                                        </Link>
+                                            <div className='d-flex align-items-center justify-content-center'>
+                                                <i className="fad fa-phone-laptop fa-2x me-2"></i>
+                                                Room Play
+                                            </div>
+                                        </ArticlesButton>
+                                    </Link>
 
-                                    </div>
-                                )
-                            })}
 
-                        </div>
-
-                        {/* <div className='small fw-bold  mt-3 mb-1'>Or</div> */}
-
-                        {/* <div className='d-flex'>
-
-                            <ArticlesButton
-                                className={`w-50`}
-                                onClick={() => {
-                                    // TODO
-                                    alert("Coming Soon!")
-                                }}
-                            >
-                                <i className="fad fa-robot"></i>
-                                Practice
-                            </ArticlesButton>
-
-                            <ArticlesButton
-                                className={`w-50`}
-                                onClick={() => {
-                                    setShowPrivateGameModal(prev => !prev)
-                                }}
-                            >
-                                <i className="fad fa-lock"></i>
-                                Private Game
-                            </ArticlesButton>
-
-                        </div> */}
-
-                        <IsDev className={'mt-3'}>
-                            <div>
+                                </>
+                                :
                                 <ArticlesButton
-                                    className="w-50"
-                                    variant='warning'
+                                    size={'lg'}
+                                    className={`w-100 mb-0 `}
+                                >
+                                    <div className='d-flex align-items-center justify-content-center'>
+                                        <i className="fad fa-phone-laptop fa-2x me-2"></i>
+                                        Room Play
+                                    </div>
+                                </ArticlesButton>
+                            }
+
+                            <div className="small text-center mb-3">
+                                Play on one screen with friends via phone.
+                            </div>
+
+                            <hr />
+
+                            <div className="fw-bold mb-1 small text-center">
+                                {lobbyDetails.players.length || 0} player{lobbyDetails.players.length > 1 && 's'} in the lobby.
+                            </div>
+
+                            {/* <div className='small fw-bold'>Public Servers</div> */}
+
+                            <div className="servers">
+
+                                {[1, 2].map(id => {
+
+                                    let lobbyLookup = lobbyDetails?.fourFrogsGlobalState?.games?.find(lobby =>
+                                        parseInt(lobby.server_id) == id
+                                    )
+
+                                    return (
+                                        <div key={id} className="server">
+
+                                            <div className='d-flex justify-content-between align-items-center w-100 mb-2'>
+                                                <div className="mb-0" style={{ fontSize: '0.9rem' }}><b>Server {id}</b></div>
+                                                <div className='mb-0'>{lobbyLookup?.players?.length || 0}/4</div>
+                                            </div>
+
+                                            <div className='d-flex justify-content-around w-100 mb-1'>
+                                                {[1, 2, 3, 4].map(player_count => {
+
+                                                    let playerLookup = false
+
+                                                    if (lobbyLookup?.players?.length >= player_count) playerLookup = true
+
+                                                    return (
+                                                        <div key={player_count} className="icon" style={{
+                                                            width: '20px',
+                                                            height: '20px',
+                                                            ...(playerLookup ? {
+                                                                backgroundColor: 'black',
+                                                            } : {
+                                                                backgroundColor: 'gray',
+                                                            }),
+                                                            border: '1px solid black'
+                                                        }}>
+
+                                                        </div>
+                                                    )
+                                                })}
+                                            </div>
+
+                                            <Link
+                                                className={``}
+                                                href={{
+                                                    pathname: `/play`,
+                                                    query: {
+                                                        server: id
+                                                    }
+                                                }}
+                                            >
+                                                <ArticlesButton
+                                                    className="px-5"
+                                                    small
+                                                >
+                                                    Join
+                                                </ArticlesButton>
+                                            </Link>
+
+                                        </div>
+                                    )
+                                })}
+
+                            </div>
+
+                            {/* <div className='small fw-bold  mt-3 mb-1'>Or</div> */}
+
+                            {/* <div className='d-flex'>
+    
+                                <ArticlesButton
+                                    className={`w-50`}
                                     onClick={() => {
-                                        socket.emit('game:four-frogs:reset', '');
+                                        // TODO
+                                        alert("Coming Soon!")
                                     }}
                                 >
-                                    Reset Server
+                                    <i className="fad fa-robot"></i>
+                                    Practice
                                 </ArticlesButton>
-                            </div>
-                        </IsDev>
+    
+                                <ArticlesButton
+                                    className={`w-50`}
+                                    onClick={() => {
+                                        setShowPrivateGameModal(prev => !prev)
+                                    }}
+                                >
+                                    <i className="fad fa-lock"></i>
+                                    Private Game
+                                </ArticlesButton>
+    
+                            </div> */}
+
+                            <IsDev className={'mt-3'}>
+                                <div>
+                                    <ArticlesButton
+                                        className="w-50"
+                                        variant='warning'
+                                        onClick={() => {
+                                            socket.emit('game:four-frogs:reset', '');
+                                        }}
+                                    >
+                                        Reset Server
+                                    </ArticlesButton>
+                                </div>
+                            </IsDev>
+
+                        </div>
+
+                        <div className="card-footer d-flex flex-wrap justify-content-center">
+
+                            <GameMenuPrimaryButtonGroup
+                                useStore={useStore}
+                                type="Landing"
+                            />
+
+                        </div>
 
                     </div>
 
-                    <div className="card-footer d-flex flex-wrap justify-content-center">
+                    <SessionButton
+                        port={process.env.NEXT_PUBLIC_GAME_PORT}
+                        friendsButton={true}
+                    />
 
-                        <ArticlesButton
-                            className={`w-50`}
-                            small
-                            onClick={() => {
-                                setShowSettingsModal(prev => !prev)
-                            }}
-                        >
-                            <i className="fad fa-cog"></i>
-                            Settings
-                        </ArticlesButton>
-
-                        <ArticlesButton
-                            className={`w-50`}
-                            small
-                            onClick={() => {
-                                setShowInfoModal({
-                                    game: game_name
-                                })
-                            }}
-                        >
-                            <i className="fad fa-info-square"></i>
-                            Rules & Controls
-                        </ArticlesButton>
-
-                        <Link href={'/'} className='w-50'>
-                            <ArticlesButton
-                                className={`w-100`}
-                                small
-                                onClick={() => {
-
-                                }}
-                            >
-                                <i className="fad fa-sign-out fa-rotate-180"></i>
-                                Leave Game
-                            </ArticlesButton>
-                        </Link>
-
-                        <ArticlesButton
-                            className={`w-50`}
-                            small
-                            onClick={() => {
-                                setShowCredits(true)
-                            }}
-                        >
-                            <i className="fad fa-users"></i>
-                            Credits
-                        </ArticlesButton>
-
-                        <ArticlesButton
-                            small
-                            className="w-50 mt-3"
-                            onClick={() => {
-                                toggleTheme()
-                            }}
-                        >
-                            <i className="fad fa-eye-dropper me-2"></i>
-                            {`Theme: ${theme === 'Dark' ? 'Dark' : 'Light'}`}
-                        </ArticlesButton>
-
-                    </div>
+                    <ReturnToLauncherButton />
 
                 </div>
 
-                {/* <GameScoreboard game="Death Race" /> */}
+                <GameScoreboard
+                    game={process.env.NEXT_PUBLIC_GAME_NAME}
+                    style="Default"
+                    darkMode={darkMode ? true : false}
+                    prepend={
+                        <>
+                            {/* <div
+                                style={{
+                                    width: '100%',
+                                    height: '200px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <RotatingMascot />
+                            </div> */}
+                        </>
+                    }
+                />
 
-                {/* <Ad section={"Games"} section_id={game_name} /> */}
+                <Ad
+                    style="Default"
+                    section={"Games"}
+                    section_id={process.env.NEXT_PUBLIC_GAME_NAME}
+                    darkMode={darkMode ? true : false}
+                    user_ad_token={userToken}
+                    userDetails={userDetails}
+                    userDetailsLoading={userDetailsLoading}
+                />
 
             </div>
         </div>
