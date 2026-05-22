@@ -4,7 +4,7 @@ import Link from "next/link";
 // import { useGameStore } from "../hooks/useGameStore";
 import ArticlesButton from "@/components/UI/Button";
 
-import ControllerPreview from "@/components/ControllerPreview";
+// import ControllerPreview from "@/components/ControllerPreview";
 
 import { usePlayersStore } from "@/hooks/usePlayersStore";
 import { useSocketStore } from "@/hooks/useSocketStore";
@@ -13,27 +13,25 @@ import { QRCodeCanvas } from "qrcode.react";
 import { useEffect, useState } from "react";
 // import { DropdownButton, DropdownItem } from "react-bootstrap";
 import { useStore } from "@/hooks/useStore";
+import { useRouter, useSearchParams } from "next/navigation";
+import GameMenuPrimaryButtonGroup from '@articles-media/articles-dev-box/GameMenuPrimaryButtonGroup';
+import { useGameStore } from "@/hooks/useGameStore";
 
 export default function LeftPanelContent(props) {
 
-    const {
-        server,
-        // players,
-        touchControlsEnabled,
-        setTouchControlsEnabled,
-        reloadScene,
-        controllerState,
-        isFullscreen,
-        requestFullscreen,
-        exitFullscreen,
-        setShowMenu
-    } = props;
+    const searchParams = useSearchParams()
+    const params = Object.fromEntries(searchParams.entries());
+    const { server } = params
 
     const {
         socket,
+        connected,
     } = useSocketStore(state => ({
         socket: state.socket,
+        connected: state.connected,
     }));
+
+    const reloadScene = useStore(state => state.reloadScene);
 
     const theme = useStore(state => state.theme);
     const toggleTheme = useStore(state => state.toggleTheme);
@@ -50,8 +48,10 @@ export default function LeftPanelContent(props) {
     // const players = usePlayersStore(state => state.players);
     const setPlayers = usePlayersStore(state => state.setPlayers);
     const populatePlayers = usePlayersStore(state => state.populatePlayers);
-    const serverGameState = usePlayersStore(state => state.serverGameState);
-    const serverRoomPlayers = usePlayersStore(state => state.serverRoomPlayers);
+
+    const gameState = useGameStore(state => state.gameState);
+
+    // const serverRoomPlayers = usePlayersStore(state => state.serverRoomPlayers);
 
     // Fix hydration error: only render window-dependent string on client
     const [clientUrl, setClientUrl] = useState("");
@@ -70,77 +70,21 @@ export default function LeftPanelContent(props) {
 
                     <div className='flex-header'>
                         <div>Server: {server}</div>
-                        <div>Players: {0}/4</div>
+                        <div>Players: {gameState?.players?.length || 0}/4</div>
+                        <div>Status: {gameState?.status}</div>
                     </div>
 
                     <div className="d-flex flex-wrap">
 
-                        <Link
-                            href={'/'}
-                            className="w-50"
-                        >
-                            <ArticlesButton
-                                className="w-100"
-                                small
-                            >
-                                <i className="fad fa-arrow-alt-square-left"></i>
-                                <span>Leave Game</span>
-                            </ArticlesButton>
-                        </Link>
-    
-                        <ArticlesButton
-                            small
-                            className="w-50"
-                            active={isFullscreen}
-                            onClick={() => {
-                                if (isFullscreen) {
-                                    exitFullscreen()
-                                } else {
-                                    requestFullscreen('death-race-game-page')
-                                }
-                            }}
-                        >
-                            {isFullscreen && <span>Exit </span>}
-                            {!isFullscreen && <span><i className='fad fa-expand'></i></span>}
-                            <span>Fullscreen</span>
-                        </ArticlesButton>
-    
-                        <div className='d-flex w-50'>
-                            <ArticlesButton
-                                className={`w-100`}
-                                small
-                                onClick={() => {
-                                    setShowSettingsModal(prev => !prev)
-                                }}
-                            >
-                                <i className="fad fa-cog"></i>
-                                Settings
-                            </ArticlesButton>
-                            <ArticlesButton
-                                className={``}
-                                small
-                                onClick={() => {
-                                    setDarkMode(!darkMode);
-                                }}
-                            >
-                                <i className="fad fa-palette"></i>
-                            </ArticlesButton>
-                        </div>
-    
-                        <ArticlesButton
-                            small
-                            className='w-50'
-                            active={sidebar}
-                            onClick={() => {
-                                toggleSidebar()
-                            }}
-                        >
-                            <i className="fad fa-cog"></i>
-                            <span>Sidebar</span>
-                        </ArticlesButton>
+                        <GameMenuPrimaryButtonGroup
+                            useStore={useStore}
+                            type="GameMenu"
+                            useRouter={useRouter}
+                        />
+
                     </div>
 
-                    {!socket?.connected &&
+                    {!connected &&
                         <div
                             className="mt-3 mb-3"
                         >
@@ -164,7 +108,7 @@ export default function LeftPanelContent(props) {
                         </div>
                     }
 
-                    {serverGameState.status == "In Lobby" &&
+                    {gameState?.status == "In Lobby" &&
                         <ArticlesButton
                             small
                             className="w-100 mt-2"
@@ -177,7 +121,6 @@ export default function LeftPanelContent(props) {
 
                             }}
                         >
-                            {!isFullscreen && <span><i className='fad fa-expand'></i></span>}
                             <span>Start Game</span>
                         </ArticlesButton>
                     }
@@ -210,16 +153,16 @@ export default function LeftPanelContent(props) {
                     </div>
 
                     <div>
-                        {serverGameState?.players?.map(player => {
+                        {gameState?.positions?.map(player => {
 
-                            let player_lookup = serverRoomPlayers.find(obj => obj.id == player)
+                            let player_lookup = gameState?.room_players?.find(obj => obj.id == player)
 
                             return (
-                                <div key={player} className="border border-danger p-1">
+                                <div key={player.player_index} className="border border-danger p-1">
 
                                     <div className="small">
                                         <div className="badge bg-articles">ID:</div>
-                                        <div>{player}</div>
+                                        <div>{player.player_index}</div>
                                     </div>
 
                                     <div className="small">
@@ -329,7 +272,7 @@ export default function LeftPanelContent(props) {
                             <ArticlesButton
                                 size="sm"
                                 className="w-50"
-                                onClick={reloadScene}
+                                onClick={() => reloadScene()}
                             >
                                 <i className="fad fa-redo"></i>
                                 Reload Game
@@ -338,7 +281,7 @@ export default function LeftPanelContent(props) {
                             <ArticlesButton
                                 size="sm"
                                 className="w-50"
-                                onClick={reloadScene}
+                                onClick={() => reloadScene()}
                             >
                                 <i className="fad fa-redo"></i>
                                 Reset Camera
@@ -365,49 +308,13 @@ export default function LeftPanelContent(props) {
                                 <i className="fad fa-redo"></i>
                                 setPlayers
                             </ArticlesButton>
-                            
+
                         </div>
 
                     </div>
 
                 </div>
             </div>
-
-            {controllerState?.connected &&
-                <div className="panel-content-group p-0 text-dark">
-
-                    <div className="p-1 border-bottom border-dark">
-                        <div className="fw-bold" style={{ fontSize: '0.7rem' }}>
-                            {controllerState?.id}
-                        </div>
-                    </div>
-
-                    <div className='p-1'>
-                        <ArticlesButton
-                            small
-                            className="w-100"
-                            active={showControllerState}
-                            onClick={() => {
-                                setShowControllerState(prev => !prev)
-                            }}
-                        >
-                            {showControllerState ? 'Hide' : 'Show'} Controller Preview
-                        </ArticlesButton>
-                    </div>
-
-                    {showControllerState && <div className='p-3'>
-
-                        <ControllerPreview
-                            controllerState={controllerState}
-                            showJSON={true}
-                            showVibrationControls={true}
-                            maxHeight={300}
-                            showPreview={true}
-                        />
-                    </div>}
-
-                </div>
-            }
 
         </div>
     )

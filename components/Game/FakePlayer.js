@@ -16,7 +16,7 @@ function Player({
     defaultMovementSpaces
 }) {
 
-    // const { players, setPlayers, setPlayer, populatePlayers, winner, setWinner, serverGameState, fakeBulletTracker, consumeFakeBullet } = usePlayersStore();
+    // const { players, setPlayers, setPlayer, populatePlayers, winner, setWinner, fakeBulletTracker, consumeFakeBullet } = usePlayersStore();
     // Or break into separate const calls:
     // const players = usePlayersStore(state => state.players);
     // const setPlayers = usePlayersStore(state => state.setPlayers);
@@ -24,7 +24,6 @@ function Player({
     // const populatePlayers = usePlayersStore(state => state.populatePlayers);
     const winner = usePlayersStore(state => state.winner);
     const setWinner = usePlayersStore(state => state.setWinner);
-    // const serverGameState = usePlayersStore(state => state.serverGameState);
     // const fakeBulletTracker = usePlayersStore(state => state.fakeBulletTracker);
     const consumeFakeBullet = usePlayersStore(state => state.consumeFakeBullet);
 

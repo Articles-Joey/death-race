@@ -2,7 +2,7 @@
 
 ![Game Preview](/public/img/game-preview.webp)
 
-Multiplayer game where 1 sniper most spot and eliminate the real players amongst the crowd of NPCs
+Multiplayer game where the sniper must spot and eliminate the real players amongst the crowd of NPCs
 
 Sniper: Figure out who the real players are before the crowd reaches the finish line
 
@@ -31,7 +31,7 @@ Create a real scene for the map in Blender, possibly multiple.
 
 Inspired by the Death Race game mode included in the Hidden in Plain Sight game. It does not support multiplayer outside local play so wanted to recreate it.
 
-## Attribution
+## Attributions
 
 [Finish Line Icon](https://www.flaticon.com/free-icon/finish_1505465?term=finish+line&page=1&position=1&origin=tag&related_id=1505465)
 

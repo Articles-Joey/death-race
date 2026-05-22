@@ -9,11 +9,16 @@ import { usePlayersStore } from "@/hooks/usePlayersStore";
 import { Model as ModelSpacesuitMen } from "@/components/Models/Spacesuit";
 import { isAfter } from "date-fns";
 import { useSocketStore } from "@/hooks/useSocketStore";
+import { useSearchParams } from "next/navigation";
 
 function Player({
     item,
     defaultMovementSpaces
 }) {
+
+    const searchParams = useSearchParams()
+    const params = Object.fromEntries(searchParams.entries());
+    const { local_play, server } = params
 
     const setPlayer = usePlayersStore(state => state.setPlayer);
     const winner = usePlayersStore(state => state.winner);

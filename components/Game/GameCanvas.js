@@ -1,5 +1,5 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import { Sky, useDetectGPU, useTexture, OrbitControls, Image } from "@react-three/drei";
+import { Sky, useDetectGPU, useTexture, OrbitControls, Image, Stats } from "@react-three/drei";
 
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 // import RenderModel from "../Battle Trap/RenderModel";
@@ -26,6 +26,7 @@ import { degToRad } from "three/src/math/MathUtils";
 import Cows from "../Models/Cows";
 import { useStore } from "@/hooks/useStore";
 import FinishLine from "../Models/FinishLine";
+import { useGameStore } from "@/hooks/useGameStore";
 
 const LANDING_CAMERA_RADIUS = 50;
 const LANDING_CAMERA_HEIGHT = 30;
@@ -65,13 +66,16 @@ function GameCanvas({
 
     const theme = useStore(state => state.theme);
     const darkMode = useStore(state => state.darkMode);
+    const showStats = useStore((state) => state?.debugConfig?.showStats);
 
     const players = usePlayersStore(state => state.players);
     const setPlayers = usePlayersStore(state => state.setPlayers);
     // const setPlayer = usePlayersStore(state => state.setPlayer);
     // const populatePlayers = usePlayersStore(state => state.populatePlayers);
     // const winner = usePlayersStore(state => state.winner);
-    const serverGameState = usePlayersStore(state => state.serverGameState);
+    // const serverGameState = usePlayersStore(state => state.serverGameState);
+
+    const gameState = useGameStore(state => state.gameState);
 
     // const [players, setPlayers] = useState([])
 
@@ -134,6 +138,10 @@ function GameCanvas({
     return (
         <Canvas camera={{ position: [-95, 55, 0], fov: 50 }}>
 
+            {showStats && <>
+                <Stats className="stats-overlay" />
+            </>}
+
             {landingAnimation
                 ? <LandingCamera />
                 : <OrbitControls />
@@ -179,7 +187,7 @@ function GameCanvas({
             <group
                 position={[-37, 0, -50]}
             >
-                {serverGameState?.positions?.length > 0 && serverGameState?.positions?.map((item, i) => {
+                {gameState?.positions?.length > 0 && gameState?.positions?.map((item, i) => {
                     return (
                         <Player
                             key={`player_index_${item.player_index}`}

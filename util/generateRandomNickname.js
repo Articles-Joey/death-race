@@ -16,9 +16,11 @@ const nouns = [
  * Generates a random fighter-themed nickname.
  * @returns {string} A random nickname like "IronRacer" or "ShadowStriker".
  */
-export const generateRandomNickname = () => {
+const generateRandomNickname = () => {
     const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
     const noun = nouns[Math.floor(Math.random() * nouns.length)];
     const num = Math.floor(Math.random() * 100);
     return `${adj}${noun}${num}`;
 };
+
+export default generateRandomNickname;

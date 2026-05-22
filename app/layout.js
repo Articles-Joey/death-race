@@ -14,8 +14,8 @@ import "@articles-media/articles-dev-box/dist/style.css";
 
 import "@articles-media/articles-gamepad-helper/dist/articles-gamepad-helper.css";
 
-import SocketLogicHandler from "@/components/SocketLogicHandler";
-import PeerLogicHandler from '@/components/PeerLogicHandler';
+import SocketLogicHandler from "@/components/Handlers/SocketLogicHandler";
+import PeerLogicHandler from '@/components/Handlers/PeerLogicHandler';
 import GlobalClientModals from '@/components/UI/GlobalClientModals';
 import LayoutClient from './layoutClient';
 import { Suspense } from 'react';
@@ -41,25 +41,15 @@ export default function RootLayout({ children }) {
 
       <head>
 
-        {/* <link
-          rel="stylesheet"
-          href={`${process.env.NEXT_PUBLIC_CDN}fonts/fontawesome/css/all.min.css`}
-        /> */}
-
       </head>
 
-      <body
-      // className={`${geistSans.variable} ${geistMono.variable}`}
-      >
+      <body>
+
+        <LayoutClient />
 
         <Suspense>
-
-          <GlobalClientModals />
-
           <SocketLogicHandler />
           <PeerLogicHandler />
-          <LayoutClient />
-
         </Suspense>
 
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>

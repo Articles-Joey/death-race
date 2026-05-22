@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic'
 
 import GameMenu from '@articles-media/articles-dev-box/GameMenu';
 
-import useFullscreen from '@/hooks/useFullScreen';
+import useFullscreen from '@articles-media/articles-dev-box/useFullscreen';
 
 import { useSocketStore } from '@/hooks/useSocketStore';
 import { usePlayersStore } from '@/hooks/usePlayersStore';
@@ -43,8 +43,8 @@ export default function DeathRaceGamePage() {
     const winner = usePlayersStore(state => state.winner);
     const setWinner = usePlayersStore(state => state.setWinner);
     // const serverGameState = usePlayersStore(state => state.serverGameState);
-    const setServerGameState = usePlayersStore(state => state.setServerGameState);
-    const setServerRoomPlayers = usePlayersStore(state => state.setServerRoomPlayers);
+    // const setServerGameState = usePlayersStore(state => state.setServerGameState);
+    // const setServerRoomPlayers = usePlayersStore(state => state.setServerRoomPlayers);
 
     // --- Cursor-following images logic ---
     useEffect(() => {
@@ -137,36 +137,36 @@ export default function DeathRaceGamePage() {
         socket: state.socket
     }));
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (server && socket.connected) {
-            socket.emit('join-room', `game:death-race-room-${server}`, {
-                server_id: server,
-                nickname: nickname,
-                client_version: '1',
-            });
-        }
+    //     if (server && socket.connected) {
+    //         socket.emit('join-room', `game:death-race-room-${server}`, {
+    //             server_id: server,
+    //             nickname: nickname,
+    //             client_version: '1',
+    //         });
+    //     }
 
-        return function cleanup() {
-            socket.emit('leave-room', `game:death-race-room-${server}`)
-        };
+    //     return function cleanup() {
+    //         socket.emit('leave-room', `game:death-race-room-${server}`)
+    //     };
 
-    }, [server, socket?.connected]);
+    // }, [server, socket?.connected]);
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        socket.on(`game:death-race-room-${server}`, function (data) {
-            console.log("Death Race Game State Update", data)
-            // setGameState(data.game)
-            setServerGameState(data.game)
-            setServerRoomPlayers(data.room_players)
-        })
+    //     socket.on(`game:death-race-room-${server}`, function (data) {
+    //         console.log("Death Race Game State Update", data)
+    //         // setGameState(data.game)
+    //         setServerGameState(data.game)
+    //         setServerRoomPlayers(data.room_players)
+    //     })
 
-        return function cleanup() {
-            socket.off(`game:death-race-room-${server}`);
-        };
+    //     return function cleanup() {
+    //         socket.off(`game:death-race-room-${server}`);
+    //     };
 
-    }, []);
+    // }, []);
 
     const [gameState, setGameState] = useState(false)
 

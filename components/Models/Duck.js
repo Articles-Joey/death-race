@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import { usePlayersStore } from "@/hooks/usePlayersStore";
 import { useSocketStore } from "@/hooks/useSocketStore";
+import { useGameStore } from "@/hooks/useGameStore";
 
 const link = `${process.env.NEXT_PUBLIC_CDN}games/Race Game/duck.gltf`;
 
@@ -32,9 +33,11 @@ export default function Duck(props) {
         // players,
         // setPlayers,
         setPlayer,
-        serverGameState,
+        // serverGameState,
         // populatePlayers
     } = usePlayersStore()
+
+    const gameState = useGameStore(state => state.serverGameState);
 
     return (
         <group {...props} dispose={null}>
@@ -49,7 +52,7 @@ export default function Duck(props) {
 
                     socket.emit('game:death-race:shoot', {
                         player_index: item.player_index,
-                        server_id: serverGameState.server_id
+                        server_id: gameState.server_id
                     });
 
                     return

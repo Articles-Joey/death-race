@@ -1,5 +1,6 @@
 {
   "name": "death-race",
+  "description": "Multiplayer game where the sniper must spot and eliminate the real players amongst the crowd of NPCs.",
   "homepage": "https://death-race.articles.media",
   "author": {
     "name": "ArticlesJoey"
@@ -13,7 +14,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@articles-media/articles-dev-box": "^1.0.42",
+    "@articles-media/articles-dev-box": "^1.3.5",
     "@articles-media/articles-gamepad-helper": "^0.0.13",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
