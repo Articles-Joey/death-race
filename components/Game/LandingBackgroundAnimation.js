@@ -1,3 +1,4 @@
+import { useStore } from '@/hooks/useStore';
 import dynamic from 'next/dynamic';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
@@ -5,9 +6,13 @@ const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
 });
 
 export default function LandingBackgroundAnimation() {
+
+    const sceneKey = useStore(state => state.sceneKey);
+
     return (
         <GameCanvas
-            landingAnimation={true}
+            key={sceneKey}
+            landingAnimationMode={true}
         />
     )
 }

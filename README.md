@@ -23,13 +23,20 @@ There are two forms of multiplayer, Room Play and normal multiplayer.
 - **Room Play**: The game is displayed on a single screen, allowing players in the same room to join using their phones and enjoy the traditional excitement together.
 - **Normal Multiplayer**: Players can join remotely and use their own screens to participate in the game.
 
-## TODO
-
-Create a real scene for the map in Blender, possibly multiple.
-
 ## Inspiration
 
 Inspired by the Death Race game mode included in the Hidden in Plain Sight game. It does not support multiplayer outside local play so wanted to recreate it.
+
+## Ways to Play
+
+- ✅ Mouse and Keyboard
+- ⚠️ Touch (Not fully working yet)
+- ⚠️ Controller (Not fully working yet)(Tested on Xbox One controller)
+
+## TODO
+
+- Finish run feature
+- Create scene picker and multiple scenes.
 
 ## Attributions
 
@@ -42,3 +49,7 @@ Inspired by the Death Race game mode included in the Hidden in Plain Sight game.
 [Crosshair Icon](https://www.svgrepo.com/svg/532236/crosshair)
 
 [Farm Field Background](https://www.freepik.com/free-vector/rural-landscape-with-hay-bales-agriculture-farm-field_13875690.htm#fromView=search&page=1&position=2&uuid=8650eeb6-8138-4d32-bc42-785af6f4ca16&query=wheat+fields+cartoon+)
+
+[Character Models - Quaternius](https://quaternius.com/packs/ultimatemodularcharacters.html)
+
+[Animal Models - Quaternius](https://quaternius.com/packs/ultimateanimatedanimals.html)

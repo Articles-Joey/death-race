@@ -8,6 +8,7 @@ import React, { useEffect } from 'react'
 import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
+import * as THREE from 'three' // 1. Import THREE to get LoopOnce constant
 
 const link = `${process.env.NEXT_PUBLIC_CDN}games/Assets/Quaternius/men/Spacesuit-transformed.glb`
 
@@ -24,8 +25,25 @@ export function Model(props) {
     if (!actions || Object.keys(actions).length === 0) return;
 
     const actionName = props.action || 'Idle';
+    
+    // Stop all playing animations smoothly
     Object.values(actions).forEach((a) => a.stop());
-    actions[actionName]?.play();
+
+    const currentAction = actions[actionName];
+
+    if (currentAction) {
+      // 2. Check if the incoming action is Death
+      if (actionName === 'Death') {
+        currentAction.setLoop(THREE.LoopOnce, 1); // Play only once
+        currentAction.clampWhenFinished = true;  // Freeze on the last frame
+      } else {
+        // Reset to normal loop loop defaults if switching back to Idle/Run
+        currentAction.setLoop(THREE.LoopRepeat, Infinity);
+        currentAction.clampWhenFinished = false;
+      }
+      
+      currentAction.reset().play();
+    }
 
   }, [actions, props.action]);
 

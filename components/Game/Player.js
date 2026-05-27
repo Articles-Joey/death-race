@@ -10,6 +10,9 @@ import { Model as ModelSpacesuitMen } from "@/components/Models/Spacesuit";
 import { isAfter } from "date-fns";
 import { useSocketStore } from "@/hooks/useSocketStore";
 import { useSearchParams } from "next/navigation";
+import { Billboard, Text } from "@react-three/drei";
+import { useGameStore } from "@/hooks/useGameStore";
+import { useStore } from "@/hooks/useStore";
 
 function Player({
     item,
@@ -20,9 +23,17 @@ function Player({
     const params = Object.fromEntries(searchParams.entries());
     const { local_play, server } = params
 
+    const debug = useStore(state => state.debug);
+
     const setPlayer = usePlayersStore(state => state.setPlayer);
     const winner = usePlayersStore(state => state.winner);
     const setWinner = usePlayersStore(state => state.setWinner);
+
+    const gameState = useGameStore(state => state.gameState);
+
+    const player_lookup = useMemo(() => {
+        return gameState?.room_players?.find(obj => obj.deathRace?.player_index == item.player_index)
+    }, [gameState, item]);
 
     const {
         socket
@@ -96,6 +107,22 @@ function Player({
 
     const [isHovered, setIsHovered] = useState(false);
 
+    useEffect(() => {
+
+        if (isHovered) {
+
+            socket.emit(`game:${process.env.NEXT_PUBLIC_GAME_KEY}:crosshairMovement`, {
+                location: [
+                    item.y - 37,
+                    0,
+                    item.x - 50
+                ]
+            })
+
+        }
+
+    }, [isHovered])
+
     return (
 
         // <Duck
@@ -111,14 +138,47 @@ function Player({
             scale={isHovered ? 3 : 2}
             item={item}
             position={[item.y, 0, item.x]}
-            onPointerOver={() => setIsHovered(true)}
-            onPointerOut={() => setIsHovered(false)}
+            onPointerOver={(e) => {
+                setIsHovered(true)
+                e.stopPropagation();
+            }}
+            onPointerOut={(e) => {
+                setIsHovered(false)
+
+                socket.emit(`game:${process.env.NEXT_PUBLIC_GAME_KEY}:crosshairMovement`, {
+                    location: null
+                })
+
+                // e.stopPropagation();
+            }}
             onClick={() => {
 
-                socket.emit('game:death-race:shoot', {
-                    player_index: item.player_index,
-                    server_id: usePlayersStore.getState().serverGameState.server_id
-                });
+                if (server) {
+
+                    // console.log("Clicked player", item, player_lookup)
+
+                    // TODO - Block on client and server
+                    // if (player_lookup?.deathRace?.bullets <= 0) return
+
+                    // TODO - Add back in
+                    // if (gameState?.status !== "In Progress") return;
+
+                    socket.emit('game:death-race:shoot', {
+                        player_index: item.player_index,
+                        server_id: server
+                    });
+
+                }
+
+                if (local_play) {
+
+                    setPlayer(item.player_index, {
+                        ...item,
+                        dead: true
+                        // x: item.x + defaultMovementSpaces
+                    });
+
+                }
 
                 return
 
@@ -132,24 +192,49 @@ function Player({
             }}
         >
 
+            {(player_lookup && debug) && (
+                <Billboard>
+                    <Text
+                        scale={0.4}
+                        position={[0, 2.25, 0]}
+                        color={"#000"}
+                    >
+                        {player_lookup.nickname || "Player " + item.player_index}
+                    </Text>
+                </Billboard>
+            )}
+
+            <mesh position={[0, 2 / 2, 0]}>
+                <cylinderGeometry args={[0.5, 0.5, 2, 8]} />
+                <meshStandardMaterial
+                    color={item.dead ? "red" : "blue"}
+                    transparent
+                    opacity={0.5}
+                />
+            </mesh>
+
             <ModelSpacesuitMen
                 action={
-                    (
-                        (
-                            (item.x < item.newX)
-                            &&
-                            isAfter(
-                                new Date(),
-                                new Date(item.timeout)
-                            )
-                        )
-                        ||
-                        item.walking
-                    )
+                    item.dead
                         ?
-                        'Walk'
+                        'Death'
                         :
-                        'Idle'
+                        (
+                            (
+                                (item.x < item.newX)
+                                &&
+                                isAfter(
+                                    new Date(),
+                                    new Date(item.timeout)
+                                )
+                            )
+                            ||
+                            item.walking
+                        )
+                            ?
+                            'Walk'
+                            :
+                            'Idle'
                 }
             />
 

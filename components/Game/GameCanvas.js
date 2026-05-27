@@ -1,5 +1,6 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { Sky, useDetectGPU, useTexture, OrbitControls, Image, Stats } from "@react-three/drei";
+import * as THREE from 'three';
 
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 // import RenderModel from "../Battle Trap/RenderModel";
@@ -27,6 +28,7 @@ import Cows from "../Models/Cows";
 import { useStore } from "@/hooks/useStore";
 import FinishLine from "../Models/FinishLine";
 import { useGameStore } from "@/hooks/useGameStore";
+import PlayerCrosshairs from "./PlayerCrosshairs";
 
 const LANDING_CAMERA_RADIUS = 50;
 const LANDING_CAMERA_HEIGHT = 30;
@@ -47,10 +49,50 @@ function LandingCamera() {
     return null;
 }
 
+function StatusWatchCamera() {
+    const { camera } = useThree();
+    const gameState = useGameStore(state => state.gameState);
+    const prevStatus = useRef(gameState?.status);
+    const [isTransitioning, setIsTransitioning] = useState(false);
+    const startTime = useRef(0);
+    const duration = 1000; // 1 second
+    const startPos = useRef(new THREE.Vector3());
+    const targetPos = useMemo(() => new THREE.Vector3(-5, 100, 0), []);
+
+    useEffect(() => {
+        if (gameState?.status === "In Progress" && prevStatus.current !== "In Progress") {
+            setIsTransitioning(true);
+            startTime.current = performance.now();
+            startPos.current.copy(camera.position);
+        }
+        prevStatus.current = gameState?.status;
+    }, [gameState?.status, camera.position]);
+
+    useFrame(() => {
+        if (isTransitioning) {
+            const now = performance.now();
+            const elapsed = now - startTime.current;
+            const t = Math.min(elapsed / duration, 1);
+
+            // Simple ease-out (cubic)
+            const easeT = 1 - Math.pow(1 - t, 3);
+
+            camera.position.lerpVectors(startPos.current, targetPos, easeT);
+            camera.lookAt(0, 0, 0);
+
+            if (t >= 1) {
+                setIsTransitioning(false);
+            }
+        }
+    });
+
+    return null;
+}
+
 const defaultMovementSpaces = 2.5
 
 function GameCanvas({
-    landingAnimation
+    landingAnimationMode
 }) {
 
     // const GPUTier = useDetectGPU()
@@ -136,16 +178,18 @@ function GameCanvas({
     }
 
     return (
-        <Canvas camera={{ position: [-95, 55, 0], fov: 50 }}>
+        <Canvas camera={{ position: [-75, 55, 55], fov: 50 }}>
 
             {showStats && <>
                 <Stats className="stats-overlay" />
             </>}
 
-            {landingAnimation
+            {landingAnimationMode
                 ? <LandingCamera />
                 : <OrbitControls />
             }
+
+            <StatusWatchCamera />
 
             {!darkMode ?
                 <>
@@ -197,6 +241,8 @@ function GameCanvas({
                     )
                 })}
             </group>
+
+            <PlayerCrosshairs />
 
             {/* <group>
                 <Farm

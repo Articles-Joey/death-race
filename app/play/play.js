@@ -15,11 +15,9 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useStore } from '@/hooks/useStore';
 import classNames from 'classnames';
 import LeftPanelContent from '@/components/UI/LeftPanel';
-// import routes from '@/components/constants/routes';
-
-const ArticlesModal = dynamic(() => import('@/components/UI/ArticlesModal'), {
-    ssr: false,
-});
+import LobbyOverlay from '@/components/UI/LobbyOverlay';
+import WinnerOverlay from '@/components/UI/WinnerOverlay';
+import TouchControls from '@/components/UI/TouchControls';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
@@ -34,17 +32,7 @@ const cursorImgUrls = [
 
 export default function DeathRaceGamePage() {
 
-    const nickname = useStore((state) => state.nickname);
-
     const fakeBulletTracker = usePlayersStore(state => state.fakeBulletTracker);
-    const setFakeBulletTracker = usePlayersStore(state => state.setFakeBulletTracker);
-    const players = usePlayersStore(state => state.players);
-    const setPlayers = usePlayersStore(state => state.setPlayers);
-    const winner = usePlayersStore(state => state.winner);
-    const setWinner = usePlayersStore(state => state.setWinner);
-    // const serverGameState = usePlayersStore(state => state.serverGameState);
-    // const setServerGameState = usePlayersStore(state => state.setServerGameState);
-    // const setServerRoomPlayers = usePlayersStore(state => state.setServerRoomPlayers);
 
     // --- Cursor-following images logic ---
     useEffect(() => {
@@ -110,13 +98,6 @@ export default function DeathRaceGamePage() {
     const params = Object.fromEntries(searchParams.entries());
     const { server } = params
 
-    // const { controllerState, setControllerState } = useControllerStore()
-    const [showControllerState, setShowControllerState] = useState(false)
-
-    // const [ cameraMode, setCameraMode ] = useState('Player')
-
-    // const [players, setPlayers] = useState([])
-
     const [isWalking, setIsWalking] = useState(null);
 
     useHotkeys('space', () => {
@@ -137,39 +118,6 @@ export default function DeathRaceGamePage() {
         socket: state.socket
     }));
 
-    // useEffect(() => {
-
-    //     if (server && socket.connected) {
-    //         socket.emit('join-room', `game:death-race-room-${server}`, {
-    //             server_id: server,
-    //             nickname: nickname,
-    //             client_version: '1',
-    //         });
-    //     }
-
-    //     return function cleanup() {
-    //         socket.emit('leave-room', `game:death-race-room-${server}`)
-    //     };
-
-    // }, [server, socket?.connected]);
-
-    // useEffect(() => {
-
-    //     socket.on(`game:death-race-room-${server}`, function (data) {
-    //         console.log("Death Race Game State Update", data)
-    //         // setGameState(data.game)
-    //         setServerGameState(data.game)
-    //         setServerRoomPlayers(data.room_players)
-    //     })
-
-    //     return function cleanup() {
-    //         socket.off(`game:death-race-room-${server}`);
-    //     };
-
-    // }, []);
-
-    const [gameState, setGameState] = useState(false)
-
     const sceneKey = useStore(state => state.sceneKey)
     const menuOpen = useStore(state => state.menuOpen)
     const sidebar = useStore(state => state.sidebar)
@@ -188,30 +136,6 @@ export default function DeathRaceGamePage() {
             id={`${process.env.NEXT_PUBLIC_GAME_KEY}-game-page`}
         >
 
-            {winner !== false &&
-                <ArticlesModal
-                    show={winner !== false}
-                    setShow={setWinner}
-                    title="Winner!"
-                    disableClose
-                    closeText={"Return to lobby"}
-                    closeAction={() => {
-                        setPlayers([])
-                        setWinner(false)
-                        router.push('/')
-                    }}
-                    action={(setShowModal) => {
-                        setPlayers([])
-                        setWinner(false)
-                        // console.log("")
-                        reloadScene()
-                        setShowModal(false)
-                    }}
-                >
-                    Player {winner} has won!
-                </ArticlesModal>
-            }
-
             <GameMenu
                 useStore={useStore}
                 LeftPanelContent={LeftPanelContent}
@@ -224,73 +148,16 @@ export default function DeathRaceGamePage() {
                 }}
             />
 
-            {/* <div className="menu-bar card card-articles p-1 justify-content-center">
-
-                <div className='flex-header align-items-center'>
-
-                    <ArticlesButton
-                        small
-                        active={showMenu}
-                        onClick={() => {
-                            setShowMenu(prev => !prev)
-                        }}
-                    >
-                        <i className="fad fa-bars"></i>
-                        <span>Menu</span>
-                    </ArticlesButton>
-
-                    <div>
-                        <ArticlesButton
-                            small
-                            onClick={() => {
-
-                            }}
-                        >
-                            <i className="fad fa-chevron-square-right"></i>
-                            <span>Move Forward</span>
-                        </ArticlesButton>
-                    </div>
-
-                </div>
-
-            </div> */}
-
-            {/* <div className={`mobile-menu ${showMenu && 'show'}`}>
-                <LeftPanelContent
-                    {...panelProps}
-                />
-            </div> */}
-
-            {/* <TouchControls
-                touchControlsEnabled={touchControlsEnabled}
-            /> */}
-
-            {/* <div className='panel-left card rounded-0 d-none d-lg-flex'>
-
-                <LeftPanelContent
-                    {...panelProps}
-                />
-
-            </div> */}
-
-            {/* <div className='game-info'>
-                <div className="card card-articles card-sm">
-                    <div className="card-body">
-                        <pre> 
-                            {JSON.stringify(playerData, undefined, 2)}
-                        </pre>
-                    </div>
-                </div>
-            </div> */}
-
             <div className='canvas-wrap'>
+
+                <TouchControls />
+
+                <LobbyOverlay />
+
+                <WinnerOverlay />
 
                 <GameCanvas
                     key={sceneKey}
-                    gameState={gameState}
-                    // playerData={playerData}
-                    // setPlayerData={setPlayerData}
-                    players={players}
                 />
 
             </div>
