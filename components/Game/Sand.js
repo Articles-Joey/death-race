@@ -4,8 +4,13 @@ import { useTexture } from "@react-three/drei"
 import { useSocketStore } from '@/hooks/useSocketStore';
 import { useState } from 'react';
 import useTouchControlsStore from '@/hooks/useTouchControlsStore';
+import { useSearchParams } from 'next/navigation';
 
 export default function Sand(props) {
+
+    const searchParams = useSearchParams()
+    const params = Object.fromEntries(searchParams.entries());
+    const { server, local_play } = params
 
     const {
         socket,
@@ -31,7 +36,7 @@ export default function Sand(props) {
     texture.map.wrapS = texture.map.wrapT = THREE.RepeatWrapping;
 
     const handlePointerMove = (event, socket) => {
-        
+
         const touchControlsEnabled = useTouchControlsStore.getState().enabled;
 
         console.log("touchControlsEnabled", touchControlsEnabled)
@@ -41,7 +46,7 @@ export default function Sand(props) {
         const point = event.point; // Get the 3D point on the geometry
         setHoverPosition([point.x, point.y, point.z]); // Update the state
 
-        if (socket) {
+        if (socket && server) {
             // console.log("Emit")a
             socket.emit(`game:${process.env.NEXT_PUBLIC_GAME_KEY}:crosshairMovement`, {
                 location: [point.x, point.y, point.z]

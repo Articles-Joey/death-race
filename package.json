@@ -38,7 +38,8 @@
     "sass": "^1.94.2",
     "socket.io-client": "^4.8.1",
     "swr": "^2.3.7",
-    "three": "^0.178.0"
+    "three": "^0.178.0",
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

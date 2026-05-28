@@ -15,20 +15,10 @@ import "@articles-media/articles-dev-box/dist/style.css";
 import "@articles-media/articles-gamepad-helper/dist/articles-gamepad-helper.css";
 
 import SocketLogicHandler from "@/components/Handlers/SocketLogicHandler";
-import PeerLogicHandler from '@/components/Handlers/PeerLogicHandler';
-import GlobalClientModals from '@/components/UI/GlobalClientModals';
+// import PeerLogicHandler from '@/components/Handlers/PeerLogicHandler';
 import LayoutClient from './layoutClient';
 import { Suspense } from 'react';
-
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+import LocalPlayHandler from '@/components/Handlers/LocalPlayHandler';
 
 export const metadata = {
   title: "Death Race",
@@ -49,7 +39,8 @@ export default function RootLayout({ children }) {
 
         <Suspense>
           <SocketLogicHandler />
-          <PeerLogicHandler />
+          {/* <PeerLogicHandler /> */}
+          <LocalPlayHandler />
         </Suspense>
 
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>

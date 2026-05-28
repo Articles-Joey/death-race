@@ -3,17 +3,19 @@ import { useGameStore } from "@/hooks/useGameStore";
 import Link from "next/link";
 import { useSocketStore } from "@/hooks/useSocketStore";
 import { useSearchParams } from "next/navigation";
+import generateRandomInteger from "@/util/generateRandomInteger";
 // import ArticlesModal from "./ArticlesModal";
 
 export default function WinnerOverlay() {
 
     const searchParams = useSearchParams()
     const params = Object.fromEntries(searchParams.entries());
-    const { server } = params
+    const { server, local_play } = params
 
     // const winner = usePlayersStore(state => state.winner);
     const socket = useSocketStore(state => state.socket);
 
+    const setGameState = useGameStore(state => state.setGameState);
     const status = useGameStore(state => state.gameState?.status);
     const winner = useGameStore(state => state.gameState?.winner);
     const room_players = useGameStore(state => state.gameState?.room_players);
@@ -40,7 +42,7 @@ export default function WinnerOverlay() {
 
                     <div>
                         <i className="fas fa-trophy me-1"></i>
-    
+
                         {player_lookup ?
                             <span>{winnerName} has won!</span>
                             :
@@ -60,10 +62,31 @@ export default function WinnerOverlay() {
                         className="btn btn-primary w-50"
                         onClick={() => {
 
-                            socket.emit('game:death-race:start-game', {
-                                server_id: server,
-                                status: "In Lobby"
-                            })
+                            if (server) {
+                                socket.emit('game:death-race:start-game', {
+                                    server_id: server,
+                                    status: "In Lobby"
+                                })
+                            }
+
+                            if (local_play === "true") {
+                                setGameState({
+                                    ...useGameStore.getState().gameState,
+                                    status: "In Lobby",
+                                    timer: 0,
+                                    positions: Array.from({ length: 23 }, (player_obj, player_i) => {
+                                        return {
+                                            player_index: player_i,
+                                            x: 0,
+                                            y: (player_i * 3),
+                                            newX: generateRandomInteger(
+                                                5,
+                                                10
+                                            ),
+                                        };
+                                    })
+                                })
+                            }
 
                         }}
                     >

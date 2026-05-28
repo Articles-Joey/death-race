@@ -10,7 +10,9 @@ Runners: Be first to the finish line while blending in with the NPCs
 
 ## Getting Started
 
-First, run the development server:
+First you will need to setup a .env file from the .env.sample provided.
+
+Then development server can be run:
 
 ```bash
 npm run dev
@@ -25,6 +27,8 @@ There are two forms of multiplayer, Room Play and normal multiplayer.
 
 ## Inspiration
 
+[Hidden in Plain Sight: Death Race](https://store.steampowered.com/app/303590/Hidden_in_Plain_Sight/)
+
 Inspired by the Death Race game mode included in the Hidden in Plain Sight game. It does not support multiplayer outside local play so wanted to recreate it.
 
 ## Ways to Play
@@ -37,6 +41,10 @@ Inspired by the Death Race game mode included in the Hidden in Plain Sight game.
 
 - Finish run feature
 - Create scene picker and multiple scenes.
+
+## Scripts
+
+In the scripts folder is reset_public and sync_to_s3. This is only for Articles Media usage. Allows for putting public folder to CloudFront to lower Vercel charges for the public facing site.
 
 ## Attributions
 

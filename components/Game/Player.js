@@ -209,7 +209,7 @@ function Player({
                 <meshStandardMaterial
                     color={item.dead ? "red" : "blue"}
                     transparent
-                    opacity={0.5}
+                    opacity={debug ? 0.5 : 0}
                 />
             </mesh>
 

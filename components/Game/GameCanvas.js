@@ -207,10 +207,10 @@ function GameCanvas({
                 </>
             }
 
-            <Sky
+            {/* <Sky
                 // distance={450000}
-                sunPosition={[0, -1, -20]}
-            />
+                sunPosition={[0, 1, -20]}
+            /> */}
 
             {/* Local Players */}
             <group

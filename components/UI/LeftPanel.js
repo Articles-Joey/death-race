@@ -54,8 +54,6 @@ export default function LeftPanelContent(props) {
     const gameState = useGameStore(state => state.gameState);
     const serverPlayers = useGameStore(state => state.gameState?.room_players || []);
 
-
-
     return (
         <div className='w-100'>
 
@@ -101,6 +99,7 @@ export default function LeftPanelContent(props) {
                         {/* <div>Server: {server}</div> */}
                         {/* <div>Players: {gameState?.players?.length || 0}/4</div> */}
                         <div>Status: {gameState?.status}</div>
+                        <div><i className="fas fa-clock"></i>{gameState?.timer?.toFixed(0)}</div>
                     </div>
 
                     {gameState?.status == "In Lobby" &&

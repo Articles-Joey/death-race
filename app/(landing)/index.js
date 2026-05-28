@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic'
 import ArticlesButton from '@/components/UI/Button';
 import { useSocketStore } from '@/hooks/useSocketStore';
 import { useStore } from '@/hooks/useStore';
+import ConnectedControllersPreview from '@/components/UI/ConnectedControllersPreview';
 
 import logo from '@/app/icon.png'
 
@@ -77,6 +78,7 @@ export default function DeathRaceLobbyPage() {
                             </ArticlesButton>
                         </Link>
                         <div className='small text-center'>Play with 2 to 4 gamepads locally.</div>
+                        <ConnectedControllersPreview />
                     </div>
                 </>}
                 // singlePlayerConfig={{
