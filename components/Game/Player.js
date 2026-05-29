@@ -1,11 +1,5 @@
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 
-// import { useFrame } from "@react-three/fiber"
-
-import { usePlayersStore } from "@/hooks/usePlayersStore";
-
-// import Duck from "./Models/Duck";
-// import { Model as ModelKingMen } from "@/components/Games/Assets/Quaternius/men/King";
 import { Model as ModelSpacesuitMen } from "@/components/Models/Spacesuit";
 import { isAfter } from "date-fns";
 import { useSocketStore } from "@/hooks/useSocketStore";
@@ -25,10 +19,6 @@ function Player({
 
     const debug = useStore(state => state.debug);
 
-    const setPlayer = usePlayersStore(state => state.setPlayer);
-    const winner = usePlayersStore(state => state.winner);
-    const setWinner = usePlayersStore(state => state.setWinner);
-
     const gameState = useGameStore(state => state.gameState);
 
     const player_lookup = useMemo(() => {
@@ -42,68 +32,6 @@ function Player({
     }));
 
     const ref = useRef();
-    // const [bobHeight, setBobHeight] = useState(0);
-
-    // const [travelDistance, setTravelDistance] = useState(-50);
-
-    // useEffect(() => {
-
-    //     const moveInterval = setInterval(() => {
-
-    //         if (!item.realPlayer) {
-
-    //             setPlayer(
-    //                 item.player_index,
-    //                 {
-    //                     ...item,
-    //                     x: item.x + 1
-    //                 }
-    //             )
-
-    //         }
-
-    //     }, 1000);
-
-    //     return () => clearInterval(moveInterval);
-
-    // }, [item.x]);
-
-    useEffect(() => {
-
-        if (item.x >= 110 && !winner) {
-            console.log("Winner detected")
-            setWinner(item.player_index)
-        }
-
-        // let moveTimeout;
-
-        // const startMoveInterval = () => {
-        //     if (item.dead || (winner !== false)) return
-
-        //     const randomTime = Math.random() * (5000 - 1000) + 1000; // Random time between 1 and 5 seconds
-
-        //     moveTimeout = setTimeout(() => {
-        //         if (!item.realPlayer) {
-        //             setPlayer(item.player_index, {
-        //                 ...item,
-        //                 x: item.x + defaultMovementSpaces
-        //             });
-        //         }
-        //         startMoveInterval(); // Call the function again to set a new interval
-        //     }, randomTime);
-        // };
-
-        // startMoveInterval(); // Initial call
-
-        // return () => clearTimeout(moveTimeout); // Cleanup on component unmount
-
-    }, [item.x, item.player_index, winner, setWinner]);
-
-    // useFrame(() => {
-    //     if (ref.current) {
-    //         ref.current.position.y = bobHeight;
-    //     }
-    // });
 
     const [isHovered, setIsHovered] = useState(false);
 
@@ -172,22 +100,13 @@ function Player({
 
                 if (local_play) {
 
-                    setPlayer(item.player_index, {
-                        ...item,
-                        dead: true
-                        // x: item.x + defaultMovementSpaces
-                    });
+                    // setPlayer(item.player_index, {
+                    //     ...item,
+                    //     dead: true
+                    //     // x: item.x + defaultMovementSpaces
+                    // });
 
                 }
-
-                return
-
-                console.log("Was clicked!", item)
-                setPlayer(item.player_index, {
-                    ...item,
-                    dead: true
-                    // x: item.x + defaultMovementSpaces
-                });
 
             }}
         >
@@ -220,16 +139,17 @@ function Player({
                         'Death'
                         :
                         (
-                            (
-                                (item.x < item.newX)
-                                &&
-                                isAfter(
-                                    new Date(),
-                                    new Date(item.timeout)
+                            player_lookup ?
+                                player_lookup?.deathRace?.walking
+                                :
+                                (
+                                    (item.x < item.newX)
+                                    &&
+                                    isAfter(
+                                        new Date(),
+                                        new Date(item.timeout)
+                                    )
                                 )
-                            )
-                            ||
-                            item.walking
                         )
                             ?
                             'Walk'

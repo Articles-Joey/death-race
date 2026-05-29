@@ -24,6 +24,8 @@ const useTouchControlsStore = create()(
                 right: false,
                 up: false,
                 down: false,
+                axisX: 0,
+                axisY: 0,
             },
             setTouchControls: (newValue) => {
                 set((prev) => ({

@@ -12,6 +12,8 @@ export default function StartGame({
     const params = Object.fromEntries(searchParams.entries());
     const { server, local_play } = params
 
+    const playerCount = useGameStore(state => state.gameState.room_players?.length || 0);
+
     const socket = useSocketStore(state => state.socket);
 
     const isLocalPlayDisabled = useMemo(() => {
@@ -55,13 +57,13 @@ export default function StartGame({
                 <span>Start Game</span>
             </ArticlesButton>
 
-            <div
+            {playerCount <= 1 && <div
                 style={{
                     fontSize: '0.8rem',
                 }}
             >
                 Need two players to start!
-            </div>
+            </div>}
 
         </div>
     )

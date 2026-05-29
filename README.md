@@ -34,8 +34,8 @@ Inspired by the Death Race game mode included in the Hidden in Plain Sight game.
 ## Ways to Play
 
 - ✅ Mouse and Keyboard
-- ⚠️ Touch (Not fully working yet)
-- ⚠️ Controller (Not fully working yet)(Tested on Xbox One controller)
+- ✅ Touch via virtual joystick
+- ✅ Controller (Tested on Xbox One controller)
 
 ## TODO
 

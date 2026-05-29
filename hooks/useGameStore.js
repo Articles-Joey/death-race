@@ -118,4 +118,18 @@ export const useGameStore = create((set) => ({
             gameState: typeof newValue === 'function' ? newValue(prev.gameState) : newValue
         }))
     },
+
+    controllableCrosshair: false,
+    setControllableCrosshair: (newValue) => {
+        set((prev) => ({
+            controllableCrosshair: newValue
+        }))
+    },
+
+    isWalking: false,
+    setIsWalking: (newValue) => {
+        set((prev) => ({
+            isWalking: newValue
+        }))
+    },
 }))

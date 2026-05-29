@@ -1,4 +1,3 @@
-import { usePlayersStore } from "@/hooks/usePlayersStore";
 import { useGameStore } from "@/hooks/useGameStore";
 import Link from "next/link";
 import { useSocketStore } from "@/hooks/useSocketStore";
@@ -12,7 +11,6 @@ export default function WinnerOverlay() {
     const params = Object.fromEntries(searchParams.entries());
     const { server, local_play } = params
 
-    // const winner = usePlayersStore(state => state.winner);
     const socket = useSocketStore(state => state.socket);
 
     const setGameState = useGameStore(state => state.setGameState);

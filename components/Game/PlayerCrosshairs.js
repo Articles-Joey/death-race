@@ -27,7 +27,11 @@ export default function PlayerCrosshairs() {
                         ]}
                     >
                         <cylinderGeometry args={[1, 1, 10, 32]} />
-                        <meshStandardMaterial color={"red"} />
+                        <meshStandardMaterial 
+                            color={player?.deathRace?.color || "red"} 
+                            transparent={true}
+                            opacity={0.5}
+                        />
                     </mesh>
                 )
             })}

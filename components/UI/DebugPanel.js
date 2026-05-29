@@ -1,18 +1,11 @@
-import { usePlayersStore } from "@/hooks/usePlayersStore";
 import ArticlesButton from "./Button"
 import { useStore } from "@/hooks/useStore";
 import { useGameStore } from "@/hooks/useGameStore";
 
 export default function DebugPanel() {
 
-    const fakeBulletTracker = usePlayersStore(state => state.fakeBulletTracker);
-    const setPlayers = usePlayersStore(state => state.setPlayers);
-    const populatePlayers = usePlayersStore(state => state.populatePlayers);
-
     const reloadScene = useStore(state => state.reloadScene);
     const debug = useStore(state => state.debug);
-
-    const gameState = useGameStore(state => state.gameState);
 
     if (!debug) return null;
 
@@ -51,7 +44,7 @@ export default function DebugPanel() {
                             size="sm"
                             className="w-50"
                             onClick={() => {
-                                populatePlayers()
+                                // populatePlayers()
                             }}
                         >
                             <i className="fad fa-redo"></i>
@@ -62,7 +55,7 @@ export default function DebugPanel() {
                             size="sm"
                             className="w-50"
                             onClick={() => {
-                                setPlayers([])
+                                // setPlayers([])
                             }}
                         >
                             <i className="fad fa-redo"></i>
@@ -71,37 +64,6 @@ export default function DebugPanel() {
 
                     </div>
 
-                </div>
-
-                <div>
-                    {gameState?.room_players?.map(player => {
-
-                        // let player_lookup = gameState?.room_players?.find(obj => obj.id == player)
-
-                        return (
-                            <div key={player.id} className="border border-danger p-1">
-
-                                <div style={{fontSize: "0.6rem"}}>{player.id}</div>
-
-                                <div className="d-flex">
-
-                                    <div className="small d-flex">
-
-                                        <div className="badge bg-articles border border-dark">
-                                            Username: {player?.nickname || "Bot"}
-                                        </div>
-
-                                        <div className="badge bg-articles border border-dark">
-                                            Bullets: {player?.deathRace?.bullets || 0}
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        )
-                    })}
                 </div>
 
             </div>

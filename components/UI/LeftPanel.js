@@ -1,23 +1,14 @@
-import Link from "next/link";
-
-// import ROUTES from '@/components/constants/routes';
-// import { useGameStore } from "../hooks/useGameStore";
 import ArticlesButton from "@/components/UI/Button";
 
-// import ControllerPreview from "@/components/ControllerPreview";
-
-import { usePlayersStore } from "@/hooks/usePlayersStore";
 import { useSocketStore } from "@/hooks/useSocketStore";
-import { QRCodeCanvas } from "qrcode.react";
 
-import { useEffect, useState } from "react";
-// import { DropdownButton, DropdownItem } from "react-bootstrap";
 import { useStore } from "@/hooks/useStore";
 import { useRouter, useSearchParams } from "next/navigation";
 import GameMenuPrimaryButtonGroup from '@articles-media/articles-dev-box/GameMenuPrimaryButtonGroup';
 import { useGameStore } from "@/hooks/useGameStore";
 import DebugPanel from "./DebugPanel";
 import StartGame from "./StartGame";
+import PlayersPanel from "./PlayersPanel";
 
 export default function LeftPanelContent(props) {
 
@@ -32,24 +23,6 @@ export default function LeftPanelContent(props) {
         socket: state.socket,
         connected: state.connected,
     }));
-
-    const reloadScene = useStore(state => state.reloadScene);
-
-    const theme = useStore(state => state.theme);
-    const toggleTheme = useStore(state => state.toggleTheme);
-
-    const darkMode = useStore(state => state.darkMode);
-    const setDarkMode = useStore(state => state.setDarkMode);
-
-    const sidebar = useStore(state => state.sidebar);
-    const toggleSidebar = useStore(state => state.toggleSidebar);
-
-    const setShowSettingsModal = useStore((state) => state.setShowSettingsModal);
-
-    const fakeBulletTracker = usePlayersStore(state => state.fakeBulletTracker);
-    // const players = usePlayersStore(state => state.players);
-    const setPlayers = usePlayersStore(state => state.setPlayers);
-    const populatePlayers = usePlayersStore(state => state.populatePlayers);
 
     const gameState = useGameStore(state => state.gameState);
     const serverPlayers = useGameStore(state => state.gameState?.room_players || []);
@@ -108,6 +81,8 @@ export default function LeftPanelContent(props) {
 
                 </div>
             </div>
+
+            <PlayersPanel />
 
             {/* Debug Controls */}
             <DebugPanel />

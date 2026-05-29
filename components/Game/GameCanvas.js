@@ -17,10 +17,7 @@ import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Farm } from "@/components/Models/Farm";
 import GrassPlane from "./Grass";
 import Sand from "./Sand";
-import { usePlayersStore } from "@/hooks/usePlayersStore";
-import { useHotkeys } from "react-hotkeys-hook";
 import Player from "./Player";
-import FakePlayer from "./FakePlayer";
 import Tree from "@/components/Models/Tree";
 import Rock from "@/components/Models/Rock";
 import { degToRad } from "three/src/math/MathUtils";
@@ -29,6 +26,8 @@ import { useStore } from "@/hooks/useStore";
 import FinishLine from "../Models/FinishLine";
 import { useGameStore } from "@/hooks/useGameStore";
 import PlayerCrosshairs from "./PlayerCrosshairs";
+import ControllableCrosshair from "./ControllableCrosshair";
+import { useSearchParams } from "next/navigation";
 
 const LANDING_CAMERA_RADIUS = 50;
 const LANDING_CAMERA_HEIGHT = 30;
@@ -95,87 +94,14 @@ function GameCanvas({
     landingAnimationMode
 }) {
 
-    // const GPUTier = useDetectGPU()
+    const searchParams = useSearchParams()
+    const params = Object.fromEntries(searchParams.entries());
+    const { server } = params
 
-    // const {
-    //     handleCameraChange,
-    //     gameState,
-    //     // players,
-    //     move,
-    //     cameraInfo,
-    //     server
-    // } = props;
-
-    const theme = useStore(state => state.theme);
     const darkMode = useStore(state => state.darkMode);
     const showStats = useStore((state) => state?.debugConfig?.showStats);
 
-    const players = usePlayersStore(state => state.players);
-    const setPlayers = usePlayersStore(state => state.setPlayers);
-    // const setPlayer = usePlayersStore(state => state.setPlayer);
-    // const populatePlayers = usePlayersStore(state => state.populatePlayers);
-    // const winner = usePlayersStore(state => state.winner);
-    // const serverGameState = usePlayersStore(state => state.serverGameState);
-
     const gameState = useGameStore(state => state.gameState);
-
-    // const [players, setPlayers] = useState([])
-
-    // function resetPlayers() {
-    //     console.log("RESET TIME")
-    //     console.log(
-    //         ...Array(25).map((player_obj, player_i) => {
-    //             return {
-    //                 player_index: player_i,
-    //                 x: (-37 + player_i * 3),
-    //                 y: 0
-    //             }
-    //         })
-    //     )
-    // }
-
-    useEffect(() => {
-        // resetPlayers()
-        // populatePlayers()
-    }, [])
-
-    useHotkeys(["space", 'd'], (event) => {
-
-        console.log("space")
-
-        movePlayer({
-            spaces: defaultMovementSpaces
-        })
-
-    }, [players]);
-
-    useHotkeys("a", (event) => {
-
-        console.log("a")
-
-        movePlayer({
-            spaces: -defaultMovementSpaces
-        })
-
-    }, [players]);
-
-    function movePlayer(settings) {
-
-        let newPlayers = [...players].map((player, index) => {
-            if (index === 0) {
-                return {
-                    ...player,
-                    x: player.x + settings.spaces
-                };
-            }
-            return player;
-        })
-
-        console.log(newPlayers)
-
-        setPlayers(newPlayers);
-
-    }
 
     return (
         <Canvas camera={{ position: [-75, 55, 55], fov: 50 }}>
@@ -213,7 +139,7 @@ function GameCanvas({
             /> */}
 
             {/* Local Players */}
-            <group
+            {/* <group
                 position={[-37, 0, -50]}
             >
                 {players?.length > 0 && players.map((item, i) => {
@@ -225,10 +151,13 @@ function GameCanvas({
                         />
                     )
                 })}
-            </group>
+            </group> */}
 
             {/* Server Players */}
             <group
+                // Logic must be changed in other areas to change this
+                // ControllableCrosshair.js
+                // Player.js - crosshairMovement emit on hover adjustment logic
                 position={[-37, 0, -50]}
             >
                 {gameState?.positions?.length > 0 && gameState?.positions?.map((item, i) => {
@@ -243,6 +172,8 @@ function GameCanvas({
             </group>
 
             <PlayerCrosshairs />
+
+            {server && <ControllableCrosshair />}
 
             {/* <group>
                 <Farm

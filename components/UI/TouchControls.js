@@ -20,6 +20,8 @@ function ActionButtons() {
         socket: state.socket
     }));
 
+    const isWalking = useGameStore(state => state.isWalking);
+    const setIsWalking = useGameStore(state => state.setIsWalking);
     const setTouchControls = useTouchControlsStore(state => state.setTouchControls);
 
     return (
@@ -28,15 +30,7 @@ function ActionButtons() {
             <ArticlesButton
                 className="action-button run-button"
                 onClick={() => {
-
                     socket.emit('game:death-race:toggle-run');
-
-                    // const touchControls = useTouchControlsStore.getState().touchControls;
-                    // console.log("Jump!")
-                    // setTouchControls({
-                    //     ...touchControls,
-                    //     jump: true
-                    // })
                 }}
             >
                 Run
@@ -45,14 +39,13 @@ function ActionButtons() {
             <ArticlesButton
                 className="action-button walk-button"
                 onClick={() => {
-
-                    socket.emit('game:death-race:toggle-walking');
-
-                    // const touchControls = useTouchControlsStore.getState().touchControls;
-                    // setTouchControls({
-                    //     ...touchControls,
-                    //     roll: true
-                    // })
+                    const next = !isWalking;
+                    setIsWalking(next);
+                    if (next) {
+                        socket.emit('game:death-race:start-walking');
+                    } else {
+                        socket.emit('game:death-race:stop-walking');
+                    }
                 }}
             >
                 Walk
@@ -132,7 +125,11 @@ export default function TouchControls(props) {
                 setTouchControls({
                     ...touchControls,
                     left: false,
-                    right: false
+                    right: false,
+                    up: false,
+                    down: false,
+                    axisX: 0,
+                    axisY: 0
                 })
             }
 
@@ -141,27 +138,32 @@ export default function TouchControls(props) {
 
                 // debug(data);
                 dragDistance = data.distance
-                console.log("2", dragDistance)
 
-                if (dragDistance > 15 && dragDirection) {
+                // Calculate normalized axis values (0 to 1)
+                // Default nipplejs radius is 50px
+                const force = Math.min(data.distance / 50, 1);
+                const axisX = data.vector ? data.vector.x * force : 0;
+                const axisY = data.vector ? data.vector.y * force : 0;
 
-                    if (dragDirection == 'left') setTouchControls({
+                if (dragDistance > 15) {
+                    setTouchControls({
                         ...touchControls,
-                        left: true,
-                        right: false
+                        axisX: axisX,
+                        axisY: axisY,
+                        left: dragDirection == 'left',
+                        right: dragDirection == 'right',
+                        up: dragDirection == 'up',
+                        down: dragDirection == 'down'
                     })
-
-                    if (dragDirection == 'right') setTouchControls({
-                        ...touchControls,
-                        left: false,
-                        right: true
-                    })
-
                 } else {
                     setTouchControls({
                         ...touchControls,
+                        axisX: 0,
+                        axisY: 0,
                         left: false,
-                        right: false
+                        right: false,
+                        up: false,
+                        down: false
                     })
                 }
 
@@ -178,7 +180,13 @@ export default function TouchControls(props) {
                     // dump(evt.type);
                     console.log("3", evt.type, dragDistance)
 
+                    if (evt.type == 'dir:up') {
+                        dragDirection = 'up'
+                    }
 
+                    if (evt.type == 'dir:down') {
+                        dragDirection = 'down'
+                    }
 
                     if (evt.type == 'dir:left') {
                         dragDirection = 'left'
