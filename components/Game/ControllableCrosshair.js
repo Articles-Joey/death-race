@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useGameStore } from "@/hooks/useGameStore";
 import { useSocketStore } from "@/hooks/useSocketStore";
 import useTouchControlsStore from "@/hooks/useTouchControlsStore";
-import { useHotkeys } from "react-hotkeys-hook";
+// import { useHotkeys } from "react-hotkeys-hook";
 
 const MOVE_SPEED = 15;       // units per second
 const DEADZONE = 0.1;        // gamepad analog deadzone
@@ -17,6 +17,7 @@ export default function ControllableCrosshair() {
     const setControllableCrosshair = useGameStore(state => state.setControllableCrosshair);
     const isWalking = useGameStore(state => state.isWalking);
     const setIsWalking = useGameStore(state => state.setIsWalking);
+    const status = useGameStore(state => state.gameState?.status);
     const socket = useSocketStore(state => state.socket);
 
     const searchParams = useSearchParams();
@@ -33,18 +34,25 @@ export default function ControllableCrosshair() {
     const rtWasPressed = useRef(false);
 
     const aWasPressed = useRef(false);
+    const ltWasPressed = useRef(false);
+    const xWasPressed = useRef(false);
 
-    useHotkeys('space', () => {
-        const next = !useGameStore.getState().isWalking;
-        setIsWalking(next);
-        if (next) {
-            socket.emit('game:death-race:start-walking');
-        } else {
-            socket.emit('game:death-race:stop-walking');
-        }
-    });
+    // useHotkeys('space', () => {
+    //     const next = !useGameStore.getState().isWalking;
+    //     setIsWalking(next);
+    //     if (next) {
+    //         socket.emit('game:death-race:start-walking');
+    //     } else {
+    //         socket.emit('game:death-race:stop-walking');
+    //     }
+    // });
 
     useFrame((_, delta) => {
+        // If the game is over, disable controller/gamepad logic and hide crosshair
+        if (status === "Game Over") {
+            if (meshRef.current) meshRef.current.visible = false;
+            return;
+        }
         const touchControlsEnabled = useTouchControlsStore.getState().enabled;
         const touchControls = useTouchControlsStore.getState().touchControls;
 
@@ -128,9 +136,27 @@ export default function ControllableCrosshair() {
                     }
                 }
                 aWasPressed.current = aPressed;
+
+                // LT trigger = buttons[6] — toggle run
+                const ltBtn = gp.buttons[6];
+                const ltPressed = ltBtn ? (ltBtn.value > 0.5 || ltBtn.pressed) : false;
+                if (ltPressed && !ltWasPressed.current) {
+                    socket.emit('game:death-race:toggle-run');
+                }
+                ltWasPressed.current = ltPressed;
+
+                // X button = buttons[2] — toggle run
+                const xBtn = gp.buttons[2];
+                const xPressed = xBtn ? (xBtn.value > 0.5 || xBtn.pressed) : false;
+                if (xPressed && !xWasPressed.current) {
+                    socket.emit('game:death-race:toggle-run');
+                }
+                xWasPressed.current = xPressed;
             } else {
                 rtWasPressed.current = false;
                 aWasPressed.current = false;
+                ltWasPressed.current = false;
+                xWasPressed.current = false;
             }
         }
 

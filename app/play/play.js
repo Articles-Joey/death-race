@@ -9,15 +9,16 @@ import GameMenu from '@articles-media/articles-dev-box/GameMenu';
 
 import useFullscreen from '@articles-media/articles-dev-box/useFullscreen';
 
-import { useSocketStore } from '@/hooks/useSocketStore';
-import { useHotkeys } from 'react-hotkeys-hook';
+// import { useSocketStore } from '@/hooks/useSocketStore';
+// import { useHotkeys } from 'react-hotkeys-hook';
 import { useStore } from '@/hooks/useStore';
 import classNames from 'classnames';
 import LeftPanelContent from '@/components/UI/LeftPanel';
 import LobbyOverlay from '@/components/UI/LobbyOverlay';
 import WinnerOverlay from '@/components/UI/WinnerOverlay';
 import TouchControls from '@/components/UI/TouchControls';
-import BulletTracker from '@/components/Game/BulletTracker';
+// import BulletTracker from '@/components/Game/BulletTracker';
+import KeyboardEventsHandler from '@/components/Handlers/KeyboardEventsHandler';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
@@ -25,31 +26,17 @@ const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
 
 export default function DeathRaceGamePage() {
 
-    const router = useRouter()
-    const pathname = usePathname()
-    const searchParams = useSearchParams()
-    const params = Object.fromEntries(searchParams.entries());
-    const { server } = params
+    // const router = useRouter()
+    // const pathname = usePathname()
+    // const searchParams = useSearchParams()
+    // const params = Object.fromEntries(searchParams.entries());
+    // const { server } = params    
 
-    const [isWalking, setIsWalking] = useState(null);
-
-    useHotkeys('space', () => {
-
-        if (isWalking) {
-            setIsWalking(false)
-            socket.emit('game:death-race:stop-walking');
-        } else {
-            setIsWalking(true)
-            socket.emit('game:death-race:start-walking');
-        }
-
-    });
-
-    const {
-        socket
-    } = useSocketStore(state => ({
-        socket: state.socket
-    }));
+    // const {
+    //     socket
+    // } = useSocketStore(state => ({
+    //     socket: state.socket
+    // }));
 
     const sceneKey = useStore(state => state.sceneKey)
     const menuOpen = useStore(state => state.menuOpen)
@@ -80,6 +67,8 @@ export default function DeathRaceGamePage() {
                     style: "Floating Panel",
                 }}
             />
+
+            <KeyboardEventsHandler />
 
             <div className='canvas-wrap'>
 

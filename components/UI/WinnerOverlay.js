@@ -1,7 +1,8 @@
+import { useEffect, useRef } from "react";
 import { useGameStore } from "@/hooks/useGameStore";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSocketStore } from "@/hooks/useSocketStore";
-import { useSearchParams } from "next/navigation";
 import generateRandomInteger from "@/util/generateRandomInteger";
 // import ArticlesModal from "./ArticlesModal";
 
@@ -12,11 +13,82 @@ export default function WinnerOverlay() {
     const { server, local_play } = params
 
     const socket = useSocketStore(state => state.socket);
+    const router = useRouter();
+
+    const aWasPressed = useRef(false);
+    const bWasPressed = useRef(false);
 
     const setGameState = useGameStore(state => state.setGameState);
     const status = useGameStore(state => state.gameState?.status);
     const winner = useGameStore(state => state.gameState?.winner);
     const room_players = useGameStore(state => state.gameState?.room_players);
+
+    const handleReturnToLobby = () => {
+        router.push('/');
+    };
+
+    const handlePlayAgain = () => {
+        if (server) {
+            socket.emit('game:death-race:start-game', {
+                server_id: server,
+                status: "In Lobby"
+            });
+        }
+
+        if (local_play === "true") {
+            setGameState({
+                ...useGameStore.getState().gameState,
+                status: "In Lobby",
+                timer: 0,
+                positions: Array.from({ length: 23 }, (player_obj, player_i) => {
+                    return {
+                        player_index: player_i,
+                        x: 0,
+                        y: (player_i * 3),
+                        newX: generateRandomInteger(5, 10),
+                    };
+                })
+            });
+        }
+    };
+
+    useEffect(() => {
+        let rafId = 0;
+        const loop = () => {
+            const pads = navigator.getGamepads ? Array.from(navigator.getGamepads()).filter(Boolean) : [];
+            if (pads.length > 0) {
+
+                const currentStatus = useGameStore.getState().gameState?.status;
+
+                if (currentStatus == "Game Over") {
+                    const gp = pads[0];
+                    const aBtn = gp.buttons[0];
+                    const bBtn = gp.buttons[1];
+                    const aPressed = aBtn ? (aBtn.value > 0.5 || aBtn.pressed) : false;
+                    const bPressed = bBtn ? (bBtn.value > 0.5 || bBtn.pressed) : false;
+
+                    if (aPressed && !aWasPressed.current) {
+                        handlePlayAgain();
+                    }
+                    if (bPressed && !bWasPressed.current) {
+                        handleReturnToLobby();
+                    }
+
+                    aWasPressed.current = aPressed;
+                    bWasPressed.current = bPressed;
+                }
+
+            } else {
+                aWasPressed.current = false;
+                bWasPressed.current = false;
+            }
+
+            rafId = requestAnimationFrame(loop);
+        };
+
+        rafId = requestAnimationFrame(loop);
+        return () => cancelAnimationFrame(rafId);
+    }, [socket, server, local_play]);
 
     if (status !== "Game Over") return null;
 
@@ -58,35 +130,7 @@ export default function WinnerOverlay() {
 
                     <button
                         className="btn btn-primary w-50"
-                        onClick={() => {
-
-                            if (server) {
-                                socket.emit('game:death-race:start-game', {
-                                    server_id: server,
-                                    status: "In Lobby"
-                                })
-                            }
-
-                            if (local_play === "true") {
-                                setGameState({
-                                    ...useGameStore.getState().gameState,
-                                    status: "In Lobby",
-                                    timer: 0,
-                                    positions: Array.from({ length: 23 }, (player_obj, player_i) => {
-                                        return {
-                                            player_index: player_i,
-                                            x: 0,
-                                            y: (player_i * 3),
-                                            newX: generateRandomInteger(
-                                                5,
-                                                10
-                                            ),
-                                        };
-                                    })
-                                })
-                            }
-
-                        }}
+                        onClick={() => handlePlayAgain()}
                     >
                         <i className="fas fa-redo me-1"></i>
                         Play again

@@ -132,4 +132,5 @@ export const useGameStore = create((set) => ({
             isWalking: newValue
         }))
     },
+    
 }))

@@ -140,7 +140,11 @@ function Player({
                         :
                         (
                             player_lookup ?
-                                player_lookup?.deathRace?.walking
+                                (
+                                    player_lookup?.deathRace?.walking
+                                    ||
+                                    player_lookup?.deathRace?.running
+                                )
                                 :
                                 (
                                     (item.x < item.newX)
