@@ -1,6 +1,6 @@
 # Death Race
 
-![Game Preview](/public/img/game-preview.webp)
+![Preview](/public/img/preview/scenic-mid-game.webp)
 
 Multiplayer game where the sniper must spot and eliminate the real players amongst the crowd of NPCs
 
@@ -27,6 +27,8 @@ There are two forms of multiplayer, Room Play and normal multiplayer.
 
 ## Inspiration
 
+[<img src="public/img/hidden-in-plain-sight.webp">](https://store.steampowered.com/app/303590/Hidden_in_Plain_Sight/)
+
 [Hidden in Plain Sight: Death Race](https://store.steampowered.com/app/303590/Hidden_in_Plain_Sight/)
 
 Inspired by the Death Race game mode included in the Hidden in Plain Sight game. It does not support multiplayer outside local play so wanted to recreate it.
@@ -34,12 +36,11 @@ Inspired by the Death Race game mode included in the Hidden in Plain Sight game.
 ## Ways to Play
 
 - ✅ Mouse and Keyboard
-- ✅ Touch via virtual joystick
+- ✅ Touch via virtual joystick and buttons
 - ✅ Controller (Tested on Xbox One controller)
 
 ## TODO
 
-- Finish run feature
 - Create scene picker and multiple scenes.
 
 ## Scripts
