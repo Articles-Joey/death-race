@@ -8,13 +8,13 @@
   "version": "0.8.0",
   "private": false,
   "scripts": {
-    "dev": "next dev --webpack -p 3019",
-    "build": "next build --webpack",
+    "dev": "next dev -p 3019",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@articles-media/articles-dev-box": "^1.5.1",
+    "@articles-media/articles-dev-box": "^1.6.1",
     "@articles-media/articles-gamepad-helper": "^0.0.13",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -27,7 +27,7 @@
     "bootstrap": "^5.3.7",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
-    "next": "16.2.9",
+    "next": "16.2.10",
     "nipplejs": "^0.10.2",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.7",

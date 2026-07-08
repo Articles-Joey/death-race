@@ -8,6 +8,7 @@ import useTouchControlsStore from "@/hooks/useTouchControlsStore";
 import DarkModeHandler from "@articles-media/articles-dev-box/DarkModeHandler";
 import GlobalClientModals from '@articles-media/articles-dev-box/GlobalClientModals';
 import GlobalBody from '@articles-media/articles-dev-box/GlobalBody';
+import HotkeyHandler from '@articles-media/articles-dev-box/HotkeyHandler';
 import { useGameStore } from '@/hooks/useGameStore';
 import { usePathname } from 'next/navigation';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -23,10 +24,10 @@ export default function LayoutClient({
     const darkMode = useStore((state) => state.darkMode);
     const setGameState = useGameStore((state) => state.setGameState);
 
-    useHotkeys('r', () => {
-        console.log("Reloading Scene")
-        useStore.getState().reloadScene();
-    }, [])
+    // useHotkeys('r', () => {
+    //     console.log("Reloading Scene")
+    //     useStore.getState().reloadScene();
+    // }, [])
 
     useEffect(() => {
         setGameState({});
@@ -39,6 +40,10 @@ export default function LayoutClient({
                 useStore={useStore}
             />
             <Suspense>
+                <HotkeyHandler
+                    useStore={useStore}
+                    useHotkeys={useHotkeys}
+                />
                 <GlobalClientModals
                     useStore={useStore}
                     useAudioStore={useAudioStore}
