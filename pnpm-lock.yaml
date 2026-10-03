@@ -178,6 +178,9 @@ importers:
       three:
         specifier: ^0.186.1
         version: 0.186.1
+      three-stdlib:
+        specifier: ^2.36.1
+        version: 2.36.1(three@0.186.1)
       uuid:
         specifier: ^14.0.0
         version: 14.0.2

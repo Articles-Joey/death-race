@@ -38,6 +38,7 @@
     "socket.io-client": "^4.8.1",
     "swr": "^2.5.1",
     "three": "^0.186.1",
+    "three-stdlib": "^2.36.1",
     "uuid": "^14.0.0",
     "zustand": "^5.0.15"
   },
