@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
@@ -6,7 +7,7 @@ import { Farm } from "../Models/Farm";
 
 export default function RotatingMascot() {
     return (
-        <div className="rotating-mascot-container w-100 h-100">
+        <Box sx={{ width: "100%", height: "100%" }}>
             <Suspense>
                 <Canvas>
     
@@ -31,6 +32,6 @@ export default function RotatingMascot() {
     
                 </Canvas>
             </Suspense>
-        </div>
+        </Box>
     );
 }

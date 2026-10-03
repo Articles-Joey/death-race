@@ -1,6 +1,9 @@
 "use client";
+
+import Box from "@mui/material/Box";
+import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import { useGamepadStore } from '@/hooks/useGamepadStore';
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 const ConnectedControllersPreview = () => {
     const controllers = useGamepadStore(state => state.gamepads);
@@ -32,59 +35,29 @@ const ConnectedControllersPreview = () => {
     if (controllers.length === 0) return null;
 
     return (
-        <div 
-            className="d-flex justify-content-center gap-2 mt-2"
-            onClick={() => {
-                console.log("Connected controllers:", controllers);
-            }}
-        >
+        <Box sx={{ display: "flex", justifyContent: "center", gap: "0.5rem", mt: "0.5rem" }} onClick={() => console.log("Connected controllers:", controllers)}>
             {controllers.map((controller, index) => (
-                <div
+                <Box
                     key={controller.index || index}
-                    className="d-flex align-items-center gap-2 px-2 py-1 bg-dark text-white rounded shadow-sm border"
-                    style={{ 
-                        maxWidth: '200px',
-                        fontSize: '0.8rem',
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap'
-                    }}
+                    sx={{ display: "flex", alignItems: "center", gap: "0.5rem", px: "0.5rem", py: "0.25rem", bgcolor: "#212529", color: "#fff", borderRadius: "0.375rem", boxShadow: "0 0.125rem 0.25rem rgba(0,0,0,0.075)", border: 1, borderColor: "divider", maxWidth: "200px", fontSize: "0.8rem", overflow: "hidden", whiteSpace: "nowrap" }}
                 >
-                    <i
-                        className="fas fa-gamepad flex-shrink-0"
-                        title={controller.id}
-                        style={{ fontSize: '1rem' }}
-                    />
-                    <div 
-                        style={{ 
-                            overflow: 'hidden',
-                            position: 'relative',
-                            width: '100%'
-                        }}
-                    >
-                        <div 
-                            className="marquee-content"
-                            style={{
-                                display: 'inline-block',
-                                paddingLeft: '0%',
-                                animation: 'marquee 10s linear infinite'
+                    <SportsEsportsIcon titleAccess={controller.id} sx={{ flexShrink: 0, fontSize: "1rem" }} />
+                    <Box sx={{ overflow: "hidden", position: "relative", width: "100%" }}>
+                        <Box
+                            sx={{
+                                display: "inline-block",
+                                paddingLeft: "0%",
+                                animation: "marquee 10s linear infinite",
+                                "@keyframes marquee": { "0%": { transform: "translateX(0)" }, "100%": { transform: "translateX(-100%)" } },
+                                "&:hover": { animationPlayState: "paused" },
                             }}
                         >
                             {controller.id}
-                        </div>
-                    </div>
-
-                    <style jsx>{`
-                        @keyframes marquee {
-                            0% { transform: translateX(0); }
-                            100% { transform: translateX(-100%); }
-                        }
-                        .marquee-content:hover {
-                            animation-play-state: paused;
-                        }
-                    `}</style>
-                </div>
+                        </Box>
+                    </Box>
+                </Box>
             ))}
-        </div>
+        </Box>
     );
 };
 

@@ -95,11 +95,6 @@ export default function LayoutClient({
                     }}
                     infoModalConfig={{
                         previewImage: darkMode ? "img/game-preview.webp" : "img/game-preview.webp",
-                        appendContent: <>
-                            {/* <div className="small text-muted mb-2">
-                                View video of game that inspired this game below.
-                            </div> */}
-                        </>
                     }}
                 />
             </Suspense>

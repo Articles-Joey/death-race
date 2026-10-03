@@ -1,3 +1,6 @@
+"use client";
+
+import Box from "@mui/material/Box";
 import { useSocketStore } from "@/hooks/useSocketStore";
 import ArticlesButton from "./Button"
 import { useSearchParams } from "next/navigation";
@@ -75,11 +78,11 @@ export default function StartGame({
     }, [socket, server, local_play, isDisabled, status]);
 
     return (
-        <div>
+        <Box>
 
             <ArticlesButton
                 small
-                className="w-100"
+                sx={{ width: "100%" }}
                 variant={"success"}
                 disabled={process.env.NODE_ENV === "production" ? isDisabled : false}
                 onClick={() => { handleStartGame(); }}
@@ -87,14 +90,14 @@ export default function StartGame({
                 <span>Start Game</span>
             </ArticlesButton>
 
-            {playerCount <= 1 && <div
-                style={{
+            {playerCount <= 1 && <Box
+                sx={{
                     fontSize: '0.8rem',
                 }}
             >
                 Need two players to start!
-            </div>}
+            </Box>}
 
-        </div>
+        </Box>
     )
 }

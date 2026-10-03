@@ -1,3 +1,14 @@
+"use client";
+
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Typography from "@mui/material/Typography";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import ArticlesButton from "./Button";
 import { useEffect, useRef } from "react";
 import { useGameStore } from "@/hooks/useGameStore";
 import Link from "next/link";
@@ -96,49 +107,44 @@ export default function WinnerOverlay() {
     const winnerName = player_lookup?.nickname || `Player ${winner}`;
 
     return (
-        <div className="winner-overlay-wrapper">
+        <Box sx={{ position: "absolute", width: "100%", height: "100%", left: 0, top: 0, display: "flex", justifyContent: "center", alignItems: "center", bgcolor: "rgba(0,0,0,0.75)", zIndex: 1 }}>
 
-            <div
-                className="card card-articles"
-                style={{
-                    minWidth: "300px",
-                }}
-            >
+            <Card sx={{ minWidth: "300px", bgcolor: "game.card", backgroundImage: "none", border: 1, borderColor: "divider" }}>
 
-                <div className="card-header">
-                    <h5 className="mb-0 card-title">Game Over!</h5>
-                </div>
-                <div className="card-body">
+                <Box sx={{ p: "0.5rem 1rem", borderBottom: 1, borderColor: "divider" }}>
+                    <Typography variant="h6" component="h5" sx={{ m: 0 }}>Game Over!</Typography>
+                </Box>
+                <CardContent>
 
-                    <div>
-                        <i className="fas fa-trophy me-1"></i>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                        <EmojiEventsIcon fontSize="small" />
 
                         {player_lookup ?
                             <span>{winnerName} has won!</span>
                             :
                             <span>NPC {winner} has won!</span>
                         }
-                    </div>
+                    </Box>
 
-                </div>
-                <div className="card-footer d-flex">
+                </CardContent>
+                <CardActions sx={{ display: "flex", borderTop: 1, borderColor: "divider", p: "0.5rem 1rem", "& > :not(style) ~ :not(style)": { ml: 0 } }}>
 
-                    <Link href="/" className="btn btn-secondary w-50">
-                        <i className="fas fa-arrow-left me-1"></i>
+                    <ArticlesButton component={Link} href="/" variant="secondary" sx={{ width: "50%" }} startIcon={<ArrowBackIcon />}>
                         Return to lobby
-                    </Link>
+                    </ArticlesButton>
 
-                    <button
-                        className="btn btn-primary w-50"
+                    <ArticlesButton
+                        variant="primary"
+                        sx={{ width: "50%" }}
+                        startIcon={<RestartAltIcon />}
                         onClick={() => handlePlayAgain()}
                     >
-                        <i className="fas fa-redo me-1"></i>
                         Play again
-                    </button>
+                    </ArticlesButton>
 
-                </div>
+                </CardActions>
 
-            </div>
+            </Card>
 
             {/* {winner !== false &&
                 <ArticlesModal
@@ -164,7 +170,7 @@ export default function WinnerOverlay() {
                 </ArticlesModal>
             } */}
 
-        </div>
+        </Box>
     )
 
 }

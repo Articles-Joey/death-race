@@ -1,72 +1,31 @@
-import ArticlesButton from "./Button"
+"use client";
+
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import ArticlesButton from "./Button";
 import { useStore } from "@/hooks/useStore";
-import { useGameStore } from "@/hooks/useGameStore";
 
 export default function DebugPanel() {
-
-    const reloadScene = useStore(state => state.reloadScene);
-    const debug = useStore(state => state.debug);
+    const reloadScene = useStore((state) => state.reloadScene);
+    const debug = useStore((state) => state.debug);
 
     if (!debug) return null;
 
     return (
-        <div
-            className="card card-articles card-sm"
-        >
-            <div className="card-body">
-
-                <div className="small text-muted">Debug Controls</div>
-
-                {/* {fakeBulletTracker} */}
-
-                <div className='d-flex flex-column mb-3'>
-
-                    <div>
-                        <ArticlesButton
-                            size="sm"
-                            className="w-50"
-                            onClick={() => reloadScene()}
-                        >
-                            <i className="fad fa-redo"></i>
-                            Reload Game
-                        </ArticlesButton>
-
-                        <ArticlesButton
-                            size="sm"
-                            className="w-50"
-                            onClick={() => reloadScene()}
-                        >
-                            <i className="fad fa-redo"></i>
-                            Reset Camera
-                        </ArticlesButton>
-
-                        <ArticlesButton
-                            size="sm"
-                            className="w-50"
-                            onClick={() => {
-                                // populatePlayers()
-                            }}
-                        >
-                            <i className="fad fa-redo"></i>
-                            populatePlayers
-                        </ArticlesButton>
-
-                        <ArticlesButton
-                            size="sm"
-                            className="w-50"
-                            onClick={() => {
-                                // setPlayers([])
-                            }}
-                        >
-                            <i className="fad fa-redo"></i>
-                            setPlayers
-                        </ArticlesButton>
-
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    )
+        <Card sx={{ bgcolor: "game.card", backgroundImage: "none", fontSize: "0.875rem", border: 1, borderColor: "divider" }}>
+            <CardContent sx={{ p: 1, "&:last-child": { pb: 1 } }}>
+                <Box sx={{ fontSize: "0.875em", color: "text.secondary" }}>Debug Controls</Box>
+                <Box sx={{ display: "flex", flexDirection: "column", mb: "1rem" }}>
+                    <Box>
+                        <ArticlesButton small sx={{ width: "50%" }} onClick={reloadScene} startIcon={<RestartAltIcon />}>Reload Game</ArticlesButton>
+                        <ArticlesButton small sx={{ width: "50%" }} onClick={reloadScene} startIcon={<RestartAltIcon />}>Reset Camera</ArticlesButton>
+                        <ArticlesButton small sx={{ width: "50%" }} onClick={() => { /* populatePlayers() */ }} startIcon={<RestartAltIcon />}>populatePlayers</ArticlesButton>
+                        <ArticlesButton small sx={{ width: "50%" }} onClick={() => { /* setPlayers([]) */ }} startIcon={<RestartAltIcon />}>setPlayers</ArticlesButton>
+                    </Box>
+                </Box>
+            </CardContent>
+        </Card>
+    );
 }
