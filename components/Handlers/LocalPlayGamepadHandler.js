@@ -3,8 +3,8 @@ import { useEffect, useRef } from "react";
 import { useGameStore } from "@/hooks/useGameStore";
 import { v4 as uuidv4 } from "uuid";
 
-const SPEED = 6;        // units per second
-const BOUNDS = 11.5;      // 23x23 area
+const SPEED = 6; // units per second
+const BOUNDS = 11.5; // 23x23 area
 const DEAD_ZONE = 0.15; // ignore small stick drift
 const FPS = 30;
 const INTERVAL = 1000 / FPS;
@@ -12,14 +12,12 @@ const INTERVAL = 1000 / FPS;
 const PLAYER_COLORS = ["#4488ff", "#ff4444", "#44dd44", "#ffdd00"];
 
 export default function LocalPlayGamepadHandler() {
-
     // Maps gamepadIndex -> player id
     const gamepadPlayerMap = useRef({});
     const prevButtonStates = useRef({}); // Maps gamepadIndex -> { lb: boolean, rb: boolean }
     const loopRef = useRef(null);
 
     useEffect(() => {
-
         const addPlayer = (gamepadIndex) => {
             if (gamepadPlayerMap.current[gamepadIndex] !== undefined) return;
 
@@ -27,7 +25,8 @@ export default function LocalPlayGamepadHandler() {
             gamepadPlayerMap.current[gamepadIndex] = id;
 
             useGameStore.getState().setGameState((prevGameState) => {
-                const slotIndex = Object.keys(gamepadPlayerMap.current).length - 1;
+                const slotIndex =
+                    Object.keys(gamepadPlayerMap.current).length - 1;
                 return {
                     ...prevGameState,
                     room_players: [
@@ -42,13 +41,17 @@ export default function LocalPlayGamepadHandler() {
                             type: "LOCAL",
                             team: "Assassin",
                             gamepadIndex,
-                            color: PLAYER_COLORS[slotIndex % PLAYER_COLORS.length],
+                            color: PLAYER_COLORS[
+                                slotIndex % PLAYER_COLORS.length
+                            ],
                         },
                     ],
                 };
             });
 
-            console.log(`[LocalPlayGamepadHandler] Gamepad ${gamepadIndex} connected → player ${id}`);
+            console.log(
+                `[LocalPlayGamepadHandler] Gamepad ${gamepadIndex} connected → player ${id}`,
+            );
         };
 
         const removePlayer = (gamepadIndex) => {
@@ -60,11 +63,13 @@ export default function LocalPlayGamepadHandler() {
             useGameStore.getState().setGameState((prevGameState) => ({
                 ...prevGameState,
                 room_players: (prevGameState.room_players || []).filter(
-                    (p) => p.id !== playerId
+                    (p) => p.id !== playerId,
                 ),
             }));
 
-            console.log(`[LocalPlayGamepadHandler] Gamepad ${gamepadIndex} disconnected → removed player ${playerId}`);
+            console.log(
+                `[LocalPlayGamepadHandler] Gamepad ${gamepadIndex} disconnected → removed player ${playerId}`,
+            );
         };
 
         const handleConnect = (e) => addPlayer(e.gamepad.index);
@@ -85,14 +90,11 @@ export default function LocalPlayGamepadHandler() {
             window.removeEventListener("gamepadconnected", handleConnect);
             window.removeEventListener("gamepaddisconnected", handleDisconnect);
         };
-
     }, []);
 
     // Movement polling loop — runs at the same FPS as LocalPlayHandler's game loop
     useEffect(() => {
-
         loopRef.current = setInterval(() => {
-
             const gamepads = navigator.getGamepads();
             const map = gamepadPlayerMap.current;
 
@@ -117,21 +119,29 @@ export default function LocalPlayGamepadHandler() {
                 if (isLobby) {
                     const lbPressed = gamepad.buttons[4]?.pressed; // Left Bumper
                     const rbPressed = gamepad.buttons[5]?.pressed; // Right Bumper
-                    
-                    const prev = prevButtonStates.current[player.gamepadIndex] || { lb: false, rb: false };
+
+                    const prev = prevButtonStates.current[
+                        player.gamepadIndex
+                    ] || { lb: false, rb: false };
 
                     // Toggle on LB or RB press (detecting transition from false to true)
                     if ((lbPressed && !prev.lb) || (rbPressed && !prev.rb)) {
-                        newTeam = player.team === "Assassin" ? "Sniper" : "Assassin";
+                        newTeam =
+                            player.team === "Assassin" ? "Sniper" : "Assassin";
                         changed = true;
                     }
 
                     // Store current state for next tick
-                    prevButtonStates.current[player.gamepadIndex] = { lb: lbPressed, rb: rbPressed };
+                    prevButtonStates.current[player.gamepadIndex] = {
+                        lb: lbPressed,
+                        rb: rbPressed,
+                    };
                 }
 
                 // --- RT Trigger Logic ---
-                const rtPressed = gamepad.buttons[7]?.pressed || gamepad.buttons[7]?.value > 0.1;
+                const rtPressed =
+                    gamepad.buttons[7]?.pressed ||
+                    gamepad.buttons[7]?.value > 0.1;
                 const isWalking = !!rtPressed;
 
                 if (player.deathRace.walking !== isWalking) {
@@ -145,7 +155,13 @@ export default function LocalPlayGamepadHandler() {
                 const dx = Math.abs(rawX) > DEAD_ZONE ? rawX : 0;
                 const dz = Math.abs(rawZ) > DEAD_ZONE ? rawZ : 0;
 
-                if (dx === 0 && dz === 0 && newTeam === player.team && player.deathRace.walking === isWalking) return player;
+                if (
+                    dx === 0 &&
+                    dz === 0 &&
+                    newTeam === player.team &&
+                    player.deathRace.walking === isWalking
+                )
+                    return player;
 
                 const step = SPEED / FPS;
 
@@ -158,9 +174,12 @@ export default function LocalPlayGamepadHandler() {
                     deathRace: {
                         ...player.deathRace,
                         walking: isWalking,
-                        x: Math.max(-BOUNDS, Math.min(BOUNDS, player.deathRace.x + dx * step)),
+                        x: Math.max(
+                            -BOUNDS,
+                            Math.min(BOUNDS, player.deathRace.x + dx * step),
+                        ),
                         // Note: Death Race seems to focus on X, but we can keep Z if needed or just update X
-                    }
+                    },
                 };
             });
 
@@ -170,13 +189,11 @@ export default function LocalPlayGamepadHandler() {
                     room_players: updatedPlayers,
                 }));
             }
-
         }, INTERVAL);
 
         return () => {
             if (loopRef.current) clearInterval(loopRef.current);
         };
-
     }, []);
 
     return null;

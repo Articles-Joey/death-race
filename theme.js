@@ -32,33 +32,50 @@ export function createAppTheme(mode = "dark") {
             MuiAlert: {
                 styleOverrides: {
                     root: {
-                        variants: [{
-                            props: { severity: "info" },
-                            style: { backgroundColor: "#60a5fa" },
-                        }],
+                        variants: [
+                            {
+                                props: { severity: "info" },
+                                style: { backgroundColor: "#60a5fa" },
+                            },
+                        ],
                     },
                 },
             },
             MuiCssBaseline: {
                 // Dev-box still uses these compatibility utilities internally.
                 styleOverrides: (muiTheme) => ({
-                    ...bootstrapCompatibilityTheme.MuiCssBaseline.styleOverrides(muiTheme),
+                    ...bootstrapCompatibilityTheme.MuiCssBaseline.styleOverrides(
+                        muiTheme,
+                    ),
                     ":root": {
                         "--articles-theme-primary": "#f9edcd",
                         "--articles-primary-color": "#adafb3",
                         "--articles-primary-color-rgb": "173, 175, 179",
-                        "--articles-primary-color-opacity-half": "rgba(173,175,179,0.5)",
+                        "--articles-primary-color-opacity-half":
+                            "rgba(173,175,179,0.5)",
                         "--articles-secondary-color": "#f9edcd",
                         "--articles-secondary-color-rgb": "249, 237, 205",
-                        "--articles-secondary-color-opacity-half": "rgba(249,237,205,0.5)",
-                        "--background-color": mode === "dark" ? "rgba(49,49,49,0.75)" : "rgba(218,224,230,0.5)",
+                        "--articles-secondary-color-opacity-half":
+                            "rgba(249,237,205,0.5)",
+                        "--background-color":
+                            mode === "dark"
+                                ? "rgba(49,49,49,0.75)"
+                                : "rgba(218,224,230,0.5)",
                         "--card-background": cardBackground,
-                        "--card-background-item": mode === "dark" ? "#232323" : "#ebebeb",
-                        "--card-background-75": mode === "dark" ? "rgba(49,49,49,0.75)" : "rgba(255,255,255,0.75)",
-                        "--card-background-50": mode === "dark" ? "rgba(49,49,49,0.5)" : "rgba(255,255,255,0.5)",
+                        "--card-background-item":
+                            mode === "dark" ? "#232323" : "#ebebeb",
+                        "--card-background-75":
+                            mode === "dark"
+                                ? "rgba(49,49,49,0.75)"
+                                : "rgba(255,255,255,0.75)",
+                        "--card-background-50":
+                            mode === "dark"
+                                ? "rgba(49,49,49,0.5)"
+                                : "rgba(255,255,255,0.5)",
                         "--articles-news-and-proposals-modal-width": "1500px",
                         "--card-background-override": cardBackground,
-                        "--articles-card-font-color": mode === "dark" ? "#fff" : "#212529",
+                        "--articles-card-font-color":
+                            mode === "dark" ? "#fff" : "#212529",
                     },
                     ".stats-overlay": {
                         position: "fixed",

@@ -1,6 +1,6 @@
 # Death Race
 
-![Preview](/public/img/preview/scenic-mid-game.webp)
+![Preview](/public/img/previews/scenic-mid-game.webp)
 
 Multiplayer game where the sniper must spot and eliminate the real players amongst the crowd of NPCs
 
@@ -20,7 +20,7 @@ npm run dev
 
 ## Multiplayer
 
-There are two forms of multiplayer, Room Play and normal multiplayer. 
+There are two forms of multiplayer, Room Play and normal multiplayer.
 
 - **Room Play**: The game is displayed on a single screen, allowing players in the same room to join using their phones and enjoy the traditional excitement together.
 - **Normal Multiplayer**: Players can join remotely and use their own screens to participate in the game.
@@ -47,6 +47,14 @@ Inspired by the Death Race game mode included in the Hidden in Plain Sight game.
 
 In the scripts folder is reset_public and sync_to_s3. This is only for Articles Media usage. Allows for putting public folder to CloudFront to lower Vercel charges for the public facing site.
 
+## Previews
+
+![Preview](/public/img/previews/dark.webp)
+![Preview](/public/img/previews/down-range.webp)
+![Preview](/public/img/previews/zoomed-out.webp)
+![Preview](/public/img/previews/from-side.webp)
+![Preview](/public/img/previews/from-finish.webp)
+
 ## Attributions
 
 [Finish Line Icon](https://www.flaticon.com/free-icon/finish_1505465?term=finish+line&page=1&position=1&origin=tag&related_id=1505465)
@@ -62,3 +70,5 @@ In the scripts folder is reset_public and sync_to_s3. This is only for Articles 
 [Character Models - Quaternius](https://quaternius.com/packs/ultimatemodularcharacters.html)
 
 [Animal Models - Quaternius](https://quaternius.com/packs/ultimateanimatedanimals.html)
+
+[Music Loop - geoffharvey](https://pixabay.com/music/cartoons-fun-on-the-farm-377651/)

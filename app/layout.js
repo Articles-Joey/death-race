@@ -9,7 +9,8 @@ import "@articles-media/articles-gamepad-helper/dist/articles-gamepad-helper.css
 
 export const metadata = {
     title: "Death Race",
-    description: "Make it to the finish line while avoiding detection. If you see any suspicious NPCs that you might think are players then use your bullet to take them out.",
+    description:
+        "Make it to the finish line while avoiding detection. If you see any suspicious NPCs that you might think are players then use your bullet to take them out.",
 };
 
 export default function RootLayout({ children }) {

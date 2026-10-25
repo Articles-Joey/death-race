@@ -4,77 +4,104 @@ Command: npx gltfjsx@6.5.2 models\Cow.gltf --output output\Cow.js --transform --
 Files: models\Cow.gltf [3.11MB] > F:\My Documents\Articles Media\AMCOT\Models\Quaternius\Animals\JSX\output\Cow-transformed.glb [543.49KB] (83%)
 */
 
-import React, { useEffect, useRef, useState } from 'react'
-import { useGraph } from '@react-three/fiber'
-import { useGLTF, useAnimations } from '@react-three/drei'
-import { SkeletonUtils } from 'three-stdlib'
+import React, { useEffect, useState } from "react";
+import { useGraph } from "@react-three/fiber";
+import { useGLTF, useAnimations } from "@react-three/drei";
+import { SkeletonUtils } from "three-stdlib";
+import { LoopRepeat } from "three";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
-const link = `${process.env.NEXT_PUBLIC_CDN}games/Assets/Quaternius/Animals/Models/Cow.glb`
+const link = getAssetSource(`models/Cow/Cow-transformed.glb`);
 
 export default function Cow(props) {
-  const group = React.useRef()
-  const { scene, animations } = useGLTF(link)
-  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
-  const { nodes, materials } = useGraph(clone)
-  const { actions } = useAnimations(animations, group)
+    const group = React.useRef();
+    const { scene, animations } = useGLTF(link);
+    const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
+    const { nodes, materials } = useGraph(clone);
+    const { actions } = useAnimations(animations, group);
 
-  const [randomYRotation] = useState(() => Math.random() * Math.PI * 2);
-  const hasStarted = useRef(false);
+    const [randomYRotation] = useState(() => Math.random() * Math.PI * 2);
+    const [animationPhase] = useState(() => Math.random());
 
-  // Animation start delay (ms) range
-  const ANIM_DELAY_MIN = 0;
-  const ANIM_DELAY_MAX = 3000;
+    useEffect(() => {
+        // Resolve the live action on every setup, including effect replays.
+        const action =
+            (props.action && actions[props.action]) || actions.Eating;
+        if (!action) return;
 
-  useEffect(() => {
-    // Guard: only start animations once, when actions are first available
-    if (hasStarted.current || !actions || Object.keys(actions).length === 0) return;
-    hasStarted.current = true;
+        action.reset().setLoop(LoopRepeat, Infinity);
+        action.clampWhenFinished = false;
+        // Start immediately at different points in the loop for natural variety.
+        action.time = animationPhase * action.getClip().duration;
+        action.play();
 
-    let animTimeout;
+        return () => {
+            action.stop();
+        };
+    }, [actions, props.action, animationPhase]);
 
-    const start = () => {
-      if (props.action && actions[props.action]) {
-        actions[props.action].play();
-      } else if (actions['Eating']) {
-        actions['Eating'].play();
-      }
-    };
-
-    // Random delay before starting animation to stagger cows
-    const delay = ANIM_DELAY_MIN + Math.random() * (ANIM_DELAY_MAX - ANIM_DELAY_MIN);
-    animTimeout = setTimeout(start, delay);
-
-    return () => {
-      clearTimeout(animTimeout);
-      // Stop all actions on unmount to avoid leaks
-      Object.values(actions || {}).forEach(a => {
-        try { a.stop(); } catch (e) {}
-      });
-    };
-  }, [actions, props.action]);
-
-  return (
-    <group ref={group} {...props} dispose={null} rotation={[0, randomYRotation, 0]}>
-      <group name="Scene">
-        <group name="AnimalArmature">
-          <primitive object={nodes.Body} />
-          <primitive object={nodes.IKBackLegL} />
-          <primitive object={nodes.IKFrontLegL} />
-          <primitive object={nodes.IKBackLegR} />
-          <primitive object={nodes.IKFrontLegR} />
+    return (
+        <group
+            ref={group}
+            {...props}
+            dispose={null}
+            rotation={[0, randomYRotation, 0]}
+        >
+            <group name="Scene">
+                <group name="AnimalArmature">
+                    <primitive object={nodes.Body} />
+                    <primitive object={nodes.IKBackLegL} />
+                    <primitive object={nodes.IKFrontLegL} />
+                    <primitive object={nodes.IKBackLegR} />
+                    <primitive object={nodes.IKFrontLegR} />
+                </group>
+                <group name="Cow">
+                    <skinnedMesh
+                        name="Cube"
+                        geometry={nodes.Cube.geometry}
+                        material={materials.PaletteMaterial001}
+                        skeleton={nodes.Cube.skeleton}
+                    />
+                    <skinnedMesh
+                        name="Cube_1"
+                        geometry={nodes.Cube_1.geometry}
+                        material={materials.PaletteMaterial001}
+                        skeleton={nodes.Cube_1.skeleton}
+                    />
+                    <skinnedMesh
+                        name="Cube_2"
+                        geometry={nodes.Cube_2.geometry}
+                        material={materials.PaletteMaterial001}
+                        skeleton={nodes.Cube_2.skeleton}
+                    />
+                    <skinnedMesh
+                        name="Cube_3"
+                        geometry={nodes.Cube_3.geometry}
+                        material={materials.PaletteMaterial001}
+                        skeleton={nodes.Cube_3.skeleton}
+                    />
+                    <skinnedMesh
+                        name="Cube_4"
+                        geometry={nodes.Cube_4.geometry}
+                        material={materials.PaletteMaterial001}
+                        skeleton={nodes.Cube_4.skeleton}
+                    />
+                    <skinnedMesh
+                        name="Cube_5"
+                        geometry={nodes.Cube_5.geometry}
+                        material={materials.PaletteMaterial001}
+                        skeleton={nodes.Cube_5.skeleton}
+                    />
+                    <skinnedMesh
+                        name="Cube_6"
+                        geometry={nodes.Cube_6.geometry}
+                        material={materials.PaletteMaterial001}
+                        skeleton={nodes.Cube_6.skeleton}
+                    />
+                </group>
+            </group>
         </group>
-        <group name="Cow">
-          <skinnedMesh name="Cube" geometry={nodes.Cube.geometry} material={materials.PaletteMaterial001} skeleton={nodes.Cube.skeleton} />
-          <skinnedMesh name="Cube_1" geometry={nodes.Cube_1.geometry} material={materials.PaletteMaterial001} skeleton={nodes.Cube_1.skeleton} />
-          <skinnedMesh name="Cube_2" geometry={nodes.Cube_2.geometry} material={materials.PaletteMaterial001} skeleton={nodes.Cube_2.skeleton} />
-          <skinnedMesh name="Cube_3" geometry={nodes.Cube_3.geometry} material={materials.PaletteMaterial001} skeleton={nodes.Cube_3.skeleton} />
-          <skinnedMesh name="Cube_4" geometry={nodes.Cube_4.geometry} material={materials.PaletteMaterial001} skeleton={nodes.Cube_4.skeleton} />
-          <skinnedMesh name="Cube_5" geometry={nodes.Cube_5.geometry} material={materials.PaletteMaterial001} skeleton={nodes.Cube_5.skeleton} />
-          <skinnedMesh name="Cube_6" geometry={nodes.Cube_6.geometry} material={materials.PaletteMaterial001} skeleton={nodes.Cube_6.skeleton} />
-        </group>
-      </group>
-    </group>
-  )
+    );
 }
 
-useGLTF.preload(link)
+useGLTF.preload(link);

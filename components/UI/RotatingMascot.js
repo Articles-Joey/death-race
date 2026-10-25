@@ -10,7 +10,6 @@ export default function RotatingMascot() {
         <Box sx={{ width: "100%", height: "100%" }}>
             <Suspense>
                 <Canvas>
-    
                     <OrbitControls
                         autoRotate
                         enableZoom={false}
@@ -18,9 +17,9 @@ export default function RotatingMascot() {
                         enableRotate={false}
                         autoRotateSpeed={10}
                     />
-    
+
                     <ambientLight intensity={2} />
-    
+
                     <Suspense fallback={null}>
                         <group
                             position={[0, -1, 0]}
@@ -29,7 +28,6 @@ export default function RotatingMascot() {
                             <Farm />
                         </group>
                     </Suspense>
-    
                 </Canvas>
             </Suspense>
         </Box>

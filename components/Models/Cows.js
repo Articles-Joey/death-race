@@ -1,8 +1,7 @@
-import React, { useMemo } from 'react';
-import Cow from './Cow';
+import React, { useMemo } from "react";
+import Cow from "./Cow";
 
 export default function Cows() {
-    
     const planeWidth = 80;
     const planeHeight = 30;
     const numberOfCows = 30;
@@ -20,16 +19,18 @@ export default function Cows() {
 
     return (
         <group position={[0, 0, 80]}>
-
             {/* <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
                 <planeGeometry args={[planeWidth, planeHeight]} />
                 <meshStandardMaterial color="red" />
             </mesh> */}
 
             {cowPositions.map((position, i) => (
-                <Cow key={i} position={position} scale={.5} />
+                <Cow
+                    key={i}
+                    position={position}
+                    scale={0.5}
+                />
             ))}
-
         </group>
     );
 }

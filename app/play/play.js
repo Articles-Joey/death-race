@@ -11,8 +11,11 @@ import LobbyOverlay from "@/components/UI/LobbyOverlay";
 import WinnerOverlay from "@/components/UI/WinnerOverlay";
 import TouchControls from "@/components/UI/TouchControls";
 import KeyboardEventsHandler from "@/components/Handlers/KeyboardEventsHandler";
+import GameAudio from "@/components/Game/GameAudio";
 
-const GameCanvas = dynamic(() => import("@/components/Game/GameCanvas"), { ssr: false });
+const GameCanvas = dynamic(() => import("@/components/Game/GameCanvas"), {
+    ssr: false,
+});
 
 export default function DeathRaceGamePage() {
     const sceneKey = useStore((state) => state.sceneKey);
@@ -22,18 +25,25 @@ export default function DeathRaceGamePage() {
 
     return (
         <Box
-            className={classNames(`${process.env.NEXT_PUBLIC_GAME_KEY}-game-page`, {
-                "menu-open": showMenu,
-                fullscreen: isFullscreen,
-                "show-sidebar": sidebar,
-            })}
+            className={classNames(
+                `${process.env.NEXT_PUBLIC_GAME_KEY}-game-page`,
+                {
+                    "menu-open": showMenu,
+                    fullscreen: isFullscreen,
+                    "show-sidebar": sidebar,
+                },
+            )}
             id={`${process.env.NEXT_PUBLIC_GAME_KEY}-game-page`}
             sx={{ position: "relative", display: "flex" }}
         >
+            <GameAudio />
             <GameMenu
                 useStore={useStore}
                 LeftPanelContent={LeftPanelContent}
-                menuBarConfig={{ style: "Corner Button", menuBarButtonPosition: "Left" }}
+                menuBarConfig={{
+                    style: "Corner Button",
+                    menuBarButtonPosition: "Left",
+                }}
                 sidebarConfig={{ style: "Floating Panel" }}
             />
             <KeyboardEventsHandler />
@@ -43,7 +53,13 @@ export default function DeathRaceGamePage() {
                     position: "relative",
                     width: "100vw",
                     height: "100vh",
-                    "& canvas": { position: "absolute", width: "100%", height: "100%", left: 0, top: 0 },
+                    "& canvas": {
+                        position: "absolute",
+                        width: "100%",
+                        height: "100%",
+                        left: 0,
+                        top: 0,
+                    },
                 }}
             >
                 <TouchControls />

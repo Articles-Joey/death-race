@@ -4,28 +4,24 @@ import { memo, useEffect, useMemo, useRef, useState } from "react";
 
 import { usePlayersStore } from "@/hooks/usePlayersStore";
 
-// import Duck from "./Models/Duck";
-// import { Model as ModelKingMen } from "@/components/Games/Assets/Quaternius/men/King";
 import { Model as ModelSpacesuitMen } from "@/components/Models/Spacesuit";
 import { isAfter } from "date-fns";
 import { useSocketStore } from "@/hooks/useSocketStore";
 import { useThree } from "@react-three/fiber";
 
-function Player({
-    item,
-    defaultMovementSpaces
-}) {
-
+function Player({ item, defaultMovementSpaces }) {
     // const { players, setPlayers, setPlayer, populatePlayers, winner, setWinner, fakeBulletTracker, consumeFakeBullet } = usePlayersStore();
     // Or break into separate const calls:
     // const players = usePlayersStore(state => state.players);
     // const setPlayers = usePlayersStore(state => state.setPlayers);
-    const setPlayer = usePlayersStore(state => state.setPlayer);
+    const setPlayer = usePlayersStore((state) => state.setPlayer);
     // const populatePlayers = usePlayersStore(state => state.populatePlayers);
-    const winner = usePlayersStore(state => state.winner);
-    const setWinner = usePlayersStore(state => state.setWinner);
+    const winner = usePlayersStore((state) => state.winner);
+    const setWinner = usePlayersStore((state) => state.setWinner);
     // const fakeBulletTracker = usePlayersStore(state => state.fakeBulletTracker);
-    const consumeFakeBullet = usePlayersStore(state => state.consumeFakeBullet);
+    const consumeFakeBullet = usePlayersStore(
+        (state) => state.consumeFakeBullet,
+    );
 
     // const {
     //     socket
@@ -82,17 +78,27 @@ function Player({
 
         const performCycle = () => {
             // --- Get latest state at the start of each cycle ---
-            const currentPlayer = usePlayersStore.getState().players.find(p => p.player_index === item.player_index);
+            const currentPlayer = usePlayersStore
+                .getState()
+                .players.find((p) => p.player_index === item.player_index);
             const currentWinner = usePlayersStore.getState().winner;
 
             // --- Stop conditions ---
-            if (isClicked || (currentPlayer && currentPlayer.dead) || currentWinner !== false) {
+            if (
+                isClicked ||
+                (currentPlayer && currentPlayer.dead) ||
+                currentWinner !== false
+            ) {
                 return; // Stop the loop
             }
 
             // --- Define random durations for this cycle ---
-            const walkDuration = WALK_DURATION_MIN + Math.random() * (WALK_DURATION_MAX - WALK_DURATION_MIN);
-            const waitDuration = WAIT_DURATION_MIN + Math.random() * (WAIT_DURATION_MAX - WAIT_DURATION_MIN);
+            const walkDuration =
+                WALK_DURATION_MIN +
+                Math.random() * (WALK_DURATION_MAX - WALK_DURATION_MIN);
+            const waitDuration =
+                WAIT_DURATION_MIN +
+                Math.random() * (WAIT_DURATION_MAX - WAIT_DURATION_MIN);
 
             let timeWalked = 0;
             const walkInterval = 100; // Update position every 100ms
@@ -105,11 +111,13 @@ function Player({
                     return;
                 }
 
-                const latestPlayer = usePlayersStore.getState().players.find(p => p.player_index === item.player_index);
+                const latestPlayer = usePlayersStore
+                    .getState()
+                    .players.find((p) => p.player_index === item.player_index);
                 if (latestPlayer) {
                     setPlayer(item.player_index, {
                         ...latestPlayer,
-                        x: latestPlayer.x + (WALK_SPEED * (walkInterval / 1000))
+                        x: latestPlayer.x + WALK_SPEED * (walkInterval / 1000),
                     });
                 }
 
@@ -126,7 +134,6 @@ function Player({
 
         // Cleanup function to clear timeout on unmount
         return () => clearTimeout(moveTimeout);
-
     }, [isClicked, item.player_index]); // Dependencies to restart the logic if needed
 
     // useFrame(() => {
@@ -151,31 +158,21 @@ function Player({
     // }, []);
 
     return (
-
-        // <Duck
-        //     ref={ref}
-        //     scale={1}
-        //     item={item}
-        //     position={[item.y, 0, item.x]}
-        // />
-
-
         <group
             ref={ref}
             scale={isClicked ? 2 : isHovered ? 3 : 2}
             item={item}
             position={[item.y, 0, item.x]}
             onPointerOver={(e) => {
-                setIsHovered(true)
+                setIsHovered(true);
                 // document.body.style.cursor = 'pointer'
                 e.stopPropagation();
             }}
             onPointerOut={() => {
-                setIsHovered(false)
+                setIsHovered(false);
                 // document.body.style.cursor = 'auto'
             }}
             onClick={(e) => {
-
                 setIsClicked(true);
 
                 consumeFakeBullet();
@@ -187,18 +184,16 @@ function Player({
                 //     server_id: serverGameState.server_id
                 // });
 
-                return
+                return;
 
-                console.log("Was clicked!", item)
+                console.log("Was clicked!", item);
                 setPlayer(item.player_index, {
                     ...item,
-                    dead: true
+                    dead: true,
                     // x: item.x + defaultMovementSpaces
                 });
-
             }}
         >
-
             <mesh
                 scale={[2, 2, 2]} // Make this larger than your model
                 onClick={handleClick}
@@ -208,37 +203,21 @@ function Player({
                 <meshBasicMaterial
                     transparent
                     opacity={0.75}
-                    color={
-                        isClicked ? 'red' : (isHovered ? 'yellow' : 'white')
-                    }
+                    color={isClicked ? "red" : isHovered ? "yellow" : "white"}
                 />
             </mesh>
 
             <ModelSpacesuitMen
                 action={
-                    (
-                        (
-                            (item.x < item.newX)
-                            &&
-                            isAfter(
-                                new Date(),
-                                new Date(item.timeout)
-                            )
-                        )
-                        ||
-                        item.walking
-                    )
-                        ?
-                        'Walk'
-                        :
-                        'Idle'
+                    (item.x < item.newX &&
+                        isAfter(new Date(), new Date(item.timeout))) ||
+                    item.walking
+                        ? "Walk"
+                        : "Idle"
                 }
             />
-
         </group>
-
-
-    )
+    );
 }
 
-export default memo(Player)
+export default memo(Player);

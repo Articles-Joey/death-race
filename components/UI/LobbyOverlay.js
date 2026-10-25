@@ -32,9 +32,12 @@ export default function LobbyOverlay() {
 
     return (
         <Box
+            className="hidden-in-screenshot-mode"
             sx={{
                 position: "absolute",
-                width: enlarge ? "calc(400px + 1rem + 3px)" : "calc(200px + 1rem + 5px)",
+                width: enlarge
+                    ? "calc(400px + 1rem + 3px)"
+                    : "calc(200px + 1rem + 5px)",
                 height: enlarge ? "800px" : "400px",
                 bgcolor: "rgba(0,0,0,0.75)",
                 borderRadius: "0.5rem",
@@ -65,7 +68,10 @@ export default function LobbyOverlay() {
                     bgcolor: enlarge ? "#ffc107" : "#198754",
                     color: "#fff",
                     transitionDuration: "200ms",
-                    "&:hover": { bgcolor: enlarge ? "#ffc107" : "#198754", transform: "scale(1.1) translate(50%, -50%)" },
+                    "&:hover": {
+                        bgcolor: enlarge ? "#ffc107" : "#198754",
+                        transform: "scale(1.1) translate(50%, -50%)",
+                    },
                 }}
             >
                 <OpenInFullIcon fontSize="small" />
@@ -79,25 +85,53 @@ export default function LobbyOverlay() {
                             ...(enlarge && { width: "calc(400px + 1rem)" }),
                             fontSize: "0.875em",
                             mb: "0.5rem",
-                            "& canvas": { position: "absolute", top: 0, left: 0, width: "100%", height: "100%", display: "block", m: "0 auto" },
+                            "& canvas": {
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "100%",
+                                height: "100%",
+                                display: "block",
+                                m: "0 auto",
+                            },
                         }}
                     >
-                        <QRCodeCanvas value={clientUrl} size={enlarge ? 400 : 200} />
+                        <QRCodeCanvas
+                            value={clientUrl}
+                            size={enlarge ? 400 : 200}
+                        />
                     </Box>
-                    <Box onClick={() => navigator.clipboard.writeText(clientUrl)} sx={{ fontSize: "0.8rem", mb: "0.25rem", textDecoration: "underline", cursor: "pointer" }}>
-                        <ContentCopyIcon fontSize="inherit" sx={{ mr: "0.2rem", verticalAlign: "middle" }} />
+                    <Box
+                        onClick={() => navigator.clipboard.writeText(clientUrl)}
+                        sx={{
+                            fontSize: "0.8rem",
+                            mb: "0.25rem",
+                            textDecoration: "underline",
+                            cursor: "pointer",
+                        }}
+                    >
+                        <ContentCopyIcon
+                            fontSize="inherit"
+                            sx={{ mr: "0.2rem", verticalAlign: "middle" }}
+                        />
                         {clientUrl}
                     </Box>
-                    <Box sx={{ mt: "0.5rem", mb: 0, fontSize: "0.875em" }} onClick={() => console.log(serverPlayers)}>
+                    <Box
+                        sx={{ mt: "0.5rem", mb: 0, fontSize: "0.875em" }}
+                        onClick={() => console.log(serverPlayers)}
+                    >
                         Connected Players: {serverPlayers.length}
                     </Box>
                     <Box sx={{ fontSize: "0.875em", mb: "0.5rem" }}>
-                        {serverPlayers.length === 0 ? "No Connections" : serverPlayers.map((player, index) => (
-                            <Box key={index}>
-                                - {player.nickname || `Player ${index + 1}`}
-                                {player.id == socket.id && " (You)"}
-                            </Box>
-                        ))}
+                        {serverPlayers.length === 0
+                            ? "No Connections"
+                            : serverPlayers.map((player, index) => (
+                                  <Box key={index}>
+                                      -{" "}
+                                      {player.nickname || `Player ${index + 1}`}
+                                      {player.id == socket.id && " (You)"}
+                                  </Box>
+                              ))}
                     </Box>
                 </Box>
             )}
@@ -107,7 +141,9 @@ export default function LobbyOverlay() {
                     <ConnectedControllersPreview />
                 </Box>
             )}
-            <Box sx={{ mt: "auto" }}><StartGame /></Box>
+            <Box sx={{ mt: "auto" }}>
+                <StartGame />
+            </Box>
         </Box>
     );
 }

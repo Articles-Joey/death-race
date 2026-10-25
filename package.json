@@ -1,54 +1,55 @@
 {
-  "name": "death-race",
-  "description": "Multiplayer game where the sniper must spot and eliminate the real players amongst the crowd of NPCs.",
-  "homepage": "https://death-race.articles.media",
-  "author": {
-    "name": "ArticlesJoey"
-  },
-  "version": "0.8.0",
-  "private": false,
-  "scripts": {
-    "dev": "next dev -p 3019",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "format": "prettier . --write"
-  },
-  "dependencies": {
-    "@articles-media/articles-dev-box": "2.0.0",
-    "@articles-media/articles-gamepad-helper": "^0.0.13",
-    "@emotion/cache": "^11.14.0",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@mui/icons-material": "^9.4.0",
-    "@mui/material": "^9.4.0",
-    "@mui/material-nextjs": "^9.4.0",
-    "@react-three/cannon": "^6.6.0",
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.8.1",
-    "classnames": "^2.5.1",
-    "date-fns": "^4.4.0",
-    "next": "^16.3.8",
-    "nipplejs": "^0.10.2",
-    "qrcode.react": "^4.2.0",
-    "react": "^19.3.0",
-    "react-countdown": "^2.3.6",
-    "react-dom": "^19.3.0",
-    "react-hotkeys-hook": "^5.1.0",
-    "socket.io-client": "^4.8.1",
-    "swr": "^2.5.1",
-    "three": "^0.186.1",
-    "three-stdlib": "^2.36.1",
-    "uuid": "^14.0.0",
-    "zustand": "^5.0.15"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "^16.3.8",
-    "eslint-config-prettier": "^10.1.8",
-    "prettier": "^3.9.6"
-  },
-  "packageManager": "pnpm@12.0.0"
+    "name": "death-race",
+    "description": "Multiplayer game where the sniper must spot and eliminate the real players amongst the crowd of NPCs.",
+    "homepage": "https://death-race.articles.media",
+    "author": {
+        "name": "ArticlesJoey"
+    },
+    "version": "0.9.0",
+    "private": false,
+    "scripts": {
+        "dev": "next dev -p 3019",
+        "build": "next build",
+        "start": "next start",
+        "lint": "eslint",
+        "format": "prettier . --write"
+    },
+    "dependencies": {
+        "@articles-media/articles-dev-box": "2.3.2",
+        "@articles-media/articles-gamepad-helper": "^0.0.13",
+        "@emotion/cache": "^11.14.0",
+        "@emotion/react": "^11.14.0",
+        "@emotion/styled": "^11.14.1",
+        "@mui/icons-material": "^9.4.0",
+        "@mui/material": "^9.4.0",
+        "@mui/material-nextjs": "^9.4.0",
+        "@react-three/cannon": "^6.6.0",
+        "@react-three/csg": "^4.0.0",
+        "@react-three/drei": "^10.7.7",
+        "@react-three/fiber": "^9.8.1",
+        "classnames": "^2.5.1",
+        "date-fns": "^4.4.0",
+        "next": "^16.4.3",
+        "nipplejs": "^0.10.2",
+        "qrcode.react": "^4.2.0",
+        "react": "^19.3.1",
+        "react-countdown": "^2.3.6",
+        "react-dom": "^19.3.1",
+        "react-hotkeys-hook": "^5.1.0",
+        "socket.io-client": "^4.8.1",
+        "swr": "^2.5.1",
+        "three": "^0.186.1",
+        "three-stdlib": "^2.36.1",
+        "uuid": "^14.0.0",
+        "zustand": "^5.0.15"
+    },
+    "devDependencies": {
+        "@eslint/eslintrc": "^3",
+        "babel-plugin-react-compiler": "^1.0.0",
+        "eslint": "^9",
+        "eslint-config-next": "^16.4.3",
+        "eslint-config-prettier": "^10.1.8",
+        "prettier": "^3.9.6"
+    },
+    "packageManager": "pnpm@12.0.0"
 }
